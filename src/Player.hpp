@@ -27,7 +27,7 @@ public:
         shape.SetAsBox(_width / 2, _height / 2, b2Vec2(0, -_height / 2.), 0.);
         b2FixtureDef fixDef;
 		fixDef.restitution = 0.1;
-		fixDef.density = 1;
+		fixDef.density = 2;
 		fixDef.friction = 1.;
         fixDef.shape = &shape;
         _body->CreateFixture(&fixDef);

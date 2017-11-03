@@ -4,8 +4,8 @@
 #include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
 
-#define SCREEN_WIDTH 1240
-#define SCREEN_HEIGHT 900
+#define SCREEN_WIDTH 800
+#define SCREEN_HEIGHT 600
 
 #define WRATIO ((float) SCREEN_WIDTH / (float) SCREEN_HEIGHT)
 #define RATIO ((float) SCREEN_HEIGHT / (float) PH_HEIGHT)

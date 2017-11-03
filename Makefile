@@ -1,7 +1,7 @@
 COMPILER = c++
-ADD_CFLAGS = -Wall -std=c++11 -O3
-LIBS = sfml-all
-NO_PKG_LIBS = -lBox2D
+ADD_CFLAGS = -Wall -std=c++11 -O3 -Iinclude/
+LIBS =
+NO_PKG_LIBS = -L/net/i/vrobles/.local/lib -lBox2D -lsfml-system -lsfml-window -lsfml-graphics -Wl,-rpath=/net/i/vrobles/.local/lib
 CXXFLAGS = `pkg-config --static --cflags $(LIBS)` $(ADD_CFLAGS)
 LINKS = `pkg-config --static --libs $(LIBS)` $(NO_PKG_LIBS)
 SOURCES = $(wildcard src/*.cpp)

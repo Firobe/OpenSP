@@ -71,7 +71,9 @@ public:
 		Object::render(window);
 		auto pos = _body->GetPosition();
 		Text::drawText(window, _name,
-				sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO));
+				sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO),
+				std::min(500., pow(abs(_body->GetLinearVelocity().y) +
+							abs(_body->GetLinearVelocity().x), 2)));
 	}
 	void update() {
 		//_body->ApplyTorque(- _standupFactor * pow(_body->GetAngle(), _standupExp), false);

@@ -29,7 +29,9 @@ int main(int argc, char** argv) {
         Player p1B(world, 0.3 * PH_WIDTH, sf::Color::Blue, "Dorian");
         Player p2A(world, 0.8 * PH_WIDTH, sf::Color::Red, "Maxime");
         Player p2B(world, 0.7 * PH_WIDTH, sf::Color::Red, "Virgile");
-        vector<Object*> objects {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &go1, &go2};
+        Player p3A(world, 0.4 * PH_WIDTH, sf::Color::Yellow, "Bernard");
+        Player p3B(world, 0.6 * PH_WIDTH, sf::Color::Yellow, "Roger");
+        vector<Object*> objects {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &go1, &go2, &p3A, &p3B};
         bool roundActive = true;
         int lastFrames = 100;
         string endMessage;
@@ -37,6 +39,10 @@ int main(int argc, char** argv) {
         while (window.isOpen() and lastFrames > 0) {
             sf::Event event;
 
+            if(rand()%70 == 0) {
+                p3A.jump();
+                p3B.jump();
+            }
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
                     window.close();

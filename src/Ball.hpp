@@ -30,10 +30,6 @@ public:
         _sprite->setFillColor(sf::Color::Green);
         _sprite->setOrigin({nr, nr});
     }
-	bool outOfBounds() {
-		return _body->GetPosition().x < 0 or
-			_body->GetPosition().x > PH_WIDTH;
-	}
 };
 
 #endif

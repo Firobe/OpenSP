@@ -3,6 +3,7 @@
 
 #include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
@@ -21,7 +22,7 @@ protected:
 	virtual void initSprite() {}
 public:
 	b2Body* _body = nullptr;
-	virtual void update() {}
+	virtual void update(float) {}
 	virtual void render(sf::RenderWindow& window) {
 		_sprite->setPosition(
 			_body->GetPosition().x * RATIO,
@@ -32,7 +33,18 @@ public:
 	virtual ~Object() {
 		delete _sprite;
 	}
+	virtual sf::Packet& output(sf::Packet& packet) const;
+	virtual sf::Packet& input(sf::Packet& packet);
+	friend sf::Packet& operator << (sf::Packet& packet, const Object&);
+	friend sf::Packet& operator >> (sf::Packet& packet, Object&);
 	
+	bool outOfBounds() {
+		return _body->GetPosition().x < 0 or
+			_body->GetPosition().x > PH_WIDTH;
+	}
 };
+
+sf::Packet& operator << (sf::Packet& packet, const std::vector<Object*> v);
+sf::Packet& operator >> (sf::Packet& packet, std::vector<Object*> v);
 
 #endif

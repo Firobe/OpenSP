@@ -33,6 +33,8 @@ public:
 			return pos.x < x and pos.x > x - UP_LENGTH and
 				pos.y > 0.75 * PH_HEIGHT - height;
 	}
+	sf::Packet& output(sf::Packet& p) const { return p; }
+	sf::Packet& input(sf::Packet& p) { return p; }
 };
 
 #endif

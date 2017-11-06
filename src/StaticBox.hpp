@@ -23,6 +23,7 @@ public:
         fixDef.density = 0.;
 		fixDef.filter.categoryBits = 0x0002;
 		fixDef.restitution = 0.1;
+		fixDef.friction = 0.8;
         fixDef.shape = &shape;
         _body->CreateFixture(&fixDef);
 		initSprite();
@@ -33,6 +34,9 @@ public:
         _sprite->setFillColor(_color);
         _sprite->setOrigin(size / 2.f);
     }
+
+	sf::Packet& output(sf::Packet& p) const { return p; }
+	sf::Packet& input(sf::Packet& p) { return p; }
 };
 
 #endif

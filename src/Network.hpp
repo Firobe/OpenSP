@@ -31,7 +31,7 @@ void clientRecv(std::vector<Object*>& objects, unsigned expectedPort, sf::IpAddr
 }
 
 void serverRecv(unsigned expectedPort, std::set<sf::IpAddress>& clients,
-		Player* p1A, Player* p1B, Player* p2A, Player* p2B) {
+		Player** p1A, Player** p1B, Player** p2A, Player** p2B) {
 	sf::UdpSocket socket;
 	if(socket.bind(expectedPort) != sf::Socket::Done) exit(1);
 	sf::IpAddress sender;
@@ -47,16 +47,16 @@ void serverRecv(unsigned expectedPort, std::set<sf::IpAddress>& clients,
 			p >> id >> in;
 			switch(in) {
 				case p1:
-					p1A->jump();
+					(*p1A)->jump();
 					break;
 				case p2:
-					p1B->jump();
+					(*p1B)->jump();
 					break;
 				case p3:
-					p2A->jump();
+					(*p2A)->jump();
 					break;
 				case p4:
-					p2B->jump();
+					(*p2B)->jump();
 					break;
 			}
 		}

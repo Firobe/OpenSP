@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
 	set<sf::IpAddress> clients;
 	if(isServer) {
-		thread t(serverRecv, port, std::ref(clients), pp1A, pp1B, pp2A, pp2B);
+		thread t(serverRecv, port, std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
 		t.detach();
 	} else {
 		thread t(clientRecv, std::ref(objects), port + 1, serverAdress);
@@ -116,7 +116,7 @@ int main(int argc, char** argv) {
 				}
 			}
 
-			if(not isServer or clients.size() > 1) {
+			if(not isServer or clients.size() > 0) {
 				if (roundActive)
 					world.Step(elapsed, 8 * 10, 3 * 10);
 				else

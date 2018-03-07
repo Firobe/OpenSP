@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 	sf::Clock clock;
 
 	sf::UdpSocket socket;
-	unsigned port = 2713;
+	unsigned port = 2724;
 	//if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
 	sf::IpAddress serverAdress = argv[1];
 	vector<Object*> objects(8);
@@ -108,7 +108,9 @@ int main(int argc, char** argv) {
 
 					if(not isServer and in != input::connect) {
 						sf::Packet p;
-						p << Event(in);
+						Event e(in);
+						p << e;
+						cout << e.in << endl;
 						socket.send(p, serverAdress, port);
 					}
                 }

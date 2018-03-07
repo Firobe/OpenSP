@@ -5,7 +5,6 @@
 #include <thread>
 #include <mutex>
 
-
 enum input : sf::Uint8 { p1, p2, p3, p4, connect};
 
 struct Event {
@@ -46,8 +45,8 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<sf::IpAddress>&
 		if( socket.receive(p, sender, port) != sf::Socket::Done)
 			exit(1);
 		if(p1A != nullptr) {
-			sf::Uint8 id;
-			sf::Uint8 in;
+			sf::Uint8 id = 2;
+			sf::Uint8 in = 2;
 			p >> id >> in;
 			mtx.lock();
 			clients.insert(sender);

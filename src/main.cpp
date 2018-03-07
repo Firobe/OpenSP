@@ -24,10 +24,18 @@ int main(int argc, char** argv) {
 
 	sf::UdpSocket socket;
 	unsigned port = 2713;
-	if(socket.bind(port) != sf::Socket::Done) return (EXIT_FAILURE);
+	if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
 	sf::IpAddress serverAdress = "127.0.0.1";
 	vector<Object*> objects(10);
-	thread t1(clientRecv, std::ref(objects), port + 1, serverAdress);
+	Player *pp1A, *pp1B, *pp2A, *pp2B;
+	set<sf::IpAddress> clients;
+	if(isServer) {
+		thread t(serverRecv, port, std::ref(clients), pp1A, pp1B, pp2A, pp2B);
+		t.detach();
+	} else {
+		thread t(clientRecv, std::ref(objects), port + 1, serverAdress);
+		t.detach();
+	}
 
 
     while (score1 < 5 and score2 < 5) {
@@ -47,6 +55,7 @@ int main(int argc, char** argv) {
         bool roundActive = true;
         int lastFrames = 100;
         string endMessage;
+		float accumulated = 0;
 		
         while (window.isOpen() and lastFrames > 0) {
             sf::Event event;
@@ -61,25 +70,48 @@ int main(int argc, char** argv) {
                     window.close();
 
                 if (event.type == sf::Event::KeyPressed) {
+					input in;
                     if (event.key.code == sf::Keyboard::Q) {
                         p1A.jump();
-						sf::Packet p;
-						p << Event(input::p1);
-						if(not isServer) socket.send(p, serverAdress, port);
+						in = input::p1;
 					}
 
-                    if (event.key.code == sf::Keyboard::D)
+                    if (event.key.code == sf::Keyboard::D) {
                         p1B.jump();
+						in = input::p2;
+					}
 
-                    if (event.key.code == sf::Keyboard::Right)
+                    if (event.key.code == sf::Keyboard::Right) {
                         p2A.jump();
+						in = input::p3;
+					}
 
-                    if (event.key.code == sf::Keyboard::Left)
+                    if (event.key.code == sf::Keyboard::Left) {
                         p2B.jump();
+						in = input::p4;
+					}
+
+					if(not isServer) {
+						sf::Packet p;
+						p << Event(in);
+						socket.send(p, serverAdress, port);
+					}
                 }
             }
 
 			float elapsed = clock.restart().asSeconds();
+
+			if(isServer) {
+				accumulated += elapsed;
+				if (accumulated >= 0.5) {
+					sf::Packet p;
+					p << objects;
+					for(auto&& ip : clients)
+						socket.send(p, ip, port + 1);
+					accumulated = 0;
+				}
+			}
+
             if (roundActive)
                 world.Step(elapsed, 8 * 10, 3 * 10);
             else

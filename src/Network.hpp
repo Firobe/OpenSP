@@ -24,7 +24,7 @@ void clientRecv(std::vector<Object*>& objects, unsigned expectedPort, sf::IpAddr
 		sf::Packet p;
 		if( socket.receive(p, sender, port) != sf::Socket::Done)
 			exit(1);
-		if(sender == serverAdress and port == expectedPort) {
+		if(sender == serverAdress) {
 			p >> objects;
 		}
 	}

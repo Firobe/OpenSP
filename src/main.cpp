@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 
 	sf::UdpSocket socket;
 	unsigned port = isServer ? 2713 : 4678;
-	if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
+	//if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
 	sf::IpAddress serverAdress = argv[1];
 	vector<Object*> objects(10);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;

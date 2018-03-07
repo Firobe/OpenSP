@@ -51,7 +51,20 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<sf::IpAddress>&
 			p >> id >> in;
 			mtx.lock();
 			clients.insert(sender);
-			switch(in) {
+			if(in == input::p1){
+				(*p1A)->jump();
+			}
+			else if(in == input::p2){
+				(*p1B)->jump();
+			}
+			else if(in == input::p3){
+				(*p2A)->jump();
+			}
+			else if(in == input::p4){
+				(*p2B)->jump();
+			}
+			else std::cout << "grou" << std::endl;
+			/*switch(in) {
 				case p1:
 					(*p1A)->jump();
 					break;
@@ -64,7 +77,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<sf::IpAddress>&
 				case p4:
 					(*p2B)->jump();
 					break;
-			}
+			}*/
 			mtx.unlock();
 		}
 	}

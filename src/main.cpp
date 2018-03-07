@@ -78,6 +78,8 @@ int main(int argc, char** argv) {
             }
 
             Text::drawText(window, "Round " + to_string(roundNb), sf::Vector2f(0, 0), 24, false);
+            Text::drawText(window, "FPS : " + to_string(static_cast<int>(1./elapsed)),
+					sf::Vector2f(0, SCREEN_HEIGHT - 30), 24, false);
             Text::drawText(window, to_string(score1) + " - " + to_string(score2),
                            sf::Vector2f(SCREEN_WIDTH / 2, 0.05 * SCREEN_HEIGHT), 45);
 

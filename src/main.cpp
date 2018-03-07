@@ -1,19 +1,22 @@
 #include <SFML/Graphics.hpp>
 #include <Box2D/Box2D.h>
 #include <iostream>
+#include <thread>
 
 #include "Ground.hpp"
 #include "Ball.hpp"
 #include "Player.hpp"
 #include "Goal.hpp"
 #include "Text.hpp"
+#include "Network.hpp"
 
 using namespace std;
+
+bool isServer = false;
 
 int main(int argc, char** argv) {
     srand(time(0));
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenSP");
-    //window.setVerticalSyncEnabled(true);
     Text::init();
     unsigned roundNb = 1;
     int score1 = 0, score2 = 0;
@@ -36,6 +39,11 @@ int main(int argc, char** argv) {
         bool roundActive = true;
         int lastFrames = 100;
         string endMessage;
+		sf::UdpSocket socket;
+		unsigned port = 2713;
+		if(socket.bind(port) != sf::Socket::Done) return (EXIT_FAILURE);
+		sf::IpAddress serverAdress = "127.0.0.1";
+		thread t1(clientRecv, std::ref(objects), port, serverAdress);
 
         while (window.isOpen() and lastFrames > 0) {
             sf::Event event;
@@ -50,8 +58,12 @@ int main(int argc, char** argv) {
                     window.close();
 
                 if (event.type == sf::Event::KeyPressed) {
-                    if (event.key.code == sf::Keyboard::Q)
+                    if (event.key.code == sf::Keyboard::Q) {
                         p1A.jump();
+						sf::Packet p;
+						p << Event(input::p1);
+						if(not isServer) socket.send(p, serverAdress, port);
+					}
 
                     if (event.key.code == sf::Keyboard::D)
                         p1B.jump();

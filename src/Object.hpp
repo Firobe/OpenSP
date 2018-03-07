@@ -3,6 +3,7 @@
 
 #include <Box2D/Box2D.h>
 #include <SFML/Graphics.hpp>
+#include <SFML/Network.hpp>
 
 #define SCREEN_WIDTH 800
 #define SCREEN_HEIGHT 600
@@ -34,5 +35,10 @@ public:
 	}
 	
 };
+
+sf::Packet& operator << (sf::Packet& packet, const Object& o);
+sf::Packet& operator >> (sf::Packet& packet, Object& o);
+sf::Packet& operator << (sf::Packet& packet, const std::vector<Object*> v);
+sf::Packet& operator >> (sf::Packet& packet, std::vector<Object*> v);
 
 #endif

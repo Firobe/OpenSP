@@ -15,6 +15,9 @@ using namespace std;
 bool isServer = false;
 
 int main(int argc, char** argv) {
+	if(argc < 2) return EXIT_FAILURE;
+	if(argv[1] != string("server"))
+		isServer = true;
     srand(time(0));
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenSP");
     Text::init();
@@ -25,7 +28,7 @@ int main(int argc, char** argv) {
 	sf::UdpSocket socket;
 	unsigned port = 2713;
 	if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
-	sf::IpAddress serverAdress = "127.0.0.1";
+	sf::IpAddress serverAdress = argv[1];
 	vector<Object*> objects(10);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
 	set<sf::IpAddress> clients;
@@ -70,7 +73,7 @@ int main(int argc, char** argv) {
                     window.close();
 
                 if (event.type == sf::Event::KeyPressed) {
-					input in;
+					input in = input::p1;
                     if (event.key.code == sf::Keyboard::Q) {
                         p1A.jump();
 						in = input::p1;

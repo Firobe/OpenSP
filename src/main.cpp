@@ -32,11 +32,12 @@ int main(int argc, char** argv) {
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
 	set<sf::IpAddress> clients;
+	mutex mtx;
 	if(isServer) {
-		thread t(serverRecv, port, std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
+		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
 		t.detach();
 	} else {
-		thread t(clientRecv, std::ref(objects), port + 1, serverAdress);
+		thread t(clientRecv, std::ref(objects), std::ref(mtx), port + 1, serverAdress);
 		t.detach();
 	}
 
@@ -65,8 +66,10 @@ int main(int argc, char** argv) {
             sf::Event event;
 
             if (rand() % 70 == 0) {
+				mtx.lock();
                 p3A.jump();
                 p3B.jump();
+				mtx.unlock();
             }
 
             while (window.pollEvent(event)) {
@@ -76,22 +79,30 @@ int main(int argc, char** argv) {
                 if (event.type == sf::Event::KeyPressed) {
 					input in = input::p1;
                     if (event.key.code == sf::Keyboard::Q) {
+						mtx.lock();
                         p1A.jump();
+						mtx.unlock();
 						in = input::p1;
 					}
 
                     if (event.key.code == sf::Keyboard::D) {
+						mtx.lock();
                         p1B.jump();
+						mtx.unlock();
 						in = input::p2;
 					}
 
                     if (event.key.code == sf::Keyboard::Right) {
+						mtx.lock();
                         p2A.jump();
+						mtx.unlock();
 						in = input::p3;
 					}
 
                     if (event.key.code == sf::Keyboard::Left) {
+						mtx.lock();
                         p2B.jump();
+						mtx.unlock();
 						in = input::p4;
 					}
 
@@ -117,6 +128,7 @@ int main(int argc, char** argv) {
 			}
 
 			if(not isServer or clients.size() > 0) {
+				mtx.lock();
 				if (roundActive)
 					world.Step(elapsed, 8 * 10, 3 * 10);
 				else
@@ -128,6 +140,7 @@ int main(int argc, char** argv) {
 					ob->update();
 					ob->render(window);
 				}
+				mtx.unlock();
 			}
 
             Text::drawText(window, "Round " + to_string(roundNb), sf::Vector2f(0, 0), 24, false);

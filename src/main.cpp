@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 		unsigned port = 2713;
 		if(socket.bind(port) != sf::Socket::Done) return (EXIT_FAILURE);
 		sf::IpAddress serverAdress = "127.0.0.1";
-		thread t1(clientRecv, std::ref(objects), port, serverAdress);
+		thread t1(clientRecv, std::ref(objects), port + 1, serverAdress);
 
         while (window.isOpen() and lastFrames > 0) {
             sf::Event event;

@@ -77,7 +77,7 @@ int main(int argc, char** argv) {
                     window.close();
 
                 if (event.type == sf::Event::KeyPressed) {
-					input in = input::p1;
+					input in = input::connect;
                     if (event.key.code == sf::Keyboard::Q) {
 						mtx.lock();
                         p1A.jump();
@@ -106,7 +106,7 @@ int main(int argc, char** argv) {
 						in = input::p4;
 					}
 
-					if(not isServer) {
+					if(not isServer and in != input::connect) {
 						sf::Packet p;
 						p << Event(in);
 						socket.send(p, serverAdress, port);

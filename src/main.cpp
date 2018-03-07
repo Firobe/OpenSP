@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 	sf::Clock clock;
 
 	sf::UdpSocket socket;
-	unsigned port = isServer ? 2713 : 4678;
+	unsigned port = 2713;
 	//if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
 	sf::IpAddress serverAdress = argv[1];
 	vector<Object*> objects(8);

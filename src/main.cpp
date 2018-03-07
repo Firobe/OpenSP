@@ -13,11 +13,12 @@ using namespace std;
 int main(int argc, char** argv) {
     srand(time(0));
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenSP");
-    window.setVerticalSyncEnabled(true);
+    //window.setVerticalSyncEnabled(true);
     Text::init();
     unsigned roundNb = 1;
+    int score1 = 0, score2 = 0;
+	sf::Clock clock;
 
-	int score1 = 0, score2 = 0;
     while (score1 < 5 and score2 < 5) {
         b2Vec2 gravity(0., 9.81);
         b2World world(gravity);
@@ -39,33 +40,39 @@ int main(int argc, char** argv) {
         while (window.isOpen() and lastFrames > 0) {
             sf::Event event;
 
-            if(rand()%70 == 0) {
+            if (rand() % 70 == 0) {
                 p3A.jump();
                 p3B.jump();
             }
+
             while (window.pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
                     window.close();
-				if (event.type == sf::Event::KeyPressed) {
-					if(event.key.code == sf::Keyboard::Q)
-						p1A.jump();
-					if(event.key.code == sf::Keyboard::D)
-						p1B.jump();
-					if(event.key.code == sf::Keyboard::Right)
-						p2A.jump();
-					if(event.key.code == sf::Keyboard::Left)
-						p2B.jump();
-				}
+
+                if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Q)
+                        p1A.jump();
+
+                    if (event.key.code == sf::Keyboard::D)
+                        p1B.jump();
+
+                    if (event.key.code == sf::Keyboard::Right)
+                        p2A.jump();
+
+                    if (event.key.code == sf::Keyboard::Left)
+                        p2B.jump();
+                }
             }
 
+			float elapsed = clock.restart().asSeconds();
             if (roundActive)
-                world.Step(1 / 60., 8*10, 3*10);
+                world.Step(elapsed, 8 * 10, 3 * 10);
             else
-                world.Step(1 / 200., 8, 3);
+                world.Step(elapsed / 4, 8, 3);
 
             window.clear();
 
-            for (auto&& ob : objects) {
+            for (auto && ob : objects) {
                 ob->update();
                 ob->render(window);
             }

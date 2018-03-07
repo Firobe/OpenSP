@@ -16,7 +16,7 @@ bool isServer = false;
 
 int main(int argc, char** argv) {
 	if(argc < 2) return EXIT_FAILURE;
-	if(argv[1] != string("server"))
+	if(argv[1] == string("server"))
 		isServer = true;
     srand(time(0));
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenSP");
@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
 	unsigned port = isServer ? 2713 : 4678;
 	//if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
 	sf::IpAddress serverAdress = argv[1];
-	vector<Object*> objects(10);
+	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
 	set<sf::IpAddress> clients;
 	if(isServer) {
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
         Player p2B(world, 0.7 * PH_WIDTH, sf::Color::Red, "Virgile");
         Player p3A(world, 0.4 * PH_WIDTH, sf::Color::Yellow, "Bernard");
         Player p3B(world, 0.6 * PH_WIDTH, sf::Color::Yellow, "Roger");
-        objects = {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &go1, &go2, &p3A, &p3B};
+        objects = {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &p3A, &p3B};
         bool roundActive = true;
         int lastFrames = 100;
         string endMessage;

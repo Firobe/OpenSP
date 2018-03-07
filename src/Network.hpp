@@ -40,7 +40,7 @@ void serverRecv(unsigned expectedPort, std::set<sf::IpAddress>& clients,
 		sf::Packet p;
 		if( socket.receive(p, sender, port) != sf::Socket::Done)
 			exit(1);
-		if(port == expectedPort and p1A != nullptr) {
+		if(p1A != nullptr) {
 			clients.insert(sender);
 			sf::Uint8 id;
 			sf::Uint8 in;

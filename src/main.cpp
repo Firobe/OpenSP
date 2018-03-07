@@ -55,6 +55,7 @@ int main(int argc, char** argv) {
         Player p3A(world, 0.4 * PH_WIDTH, sf::Color::Yellow, "Bernard");
         Player p3B(world, 0.6 * PH_WIDTH, sf::Color::Yellow, "Roger");
         objects = {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &p3A, &p3B};
+		pp1A = &p1A; pp1B = &p1B; pp2A = &p2A; pp2B = &p2B;
         bool roundActive = true;
         int lastFrames = 100;
         string endMessage;

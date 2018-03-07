@@ -26,6 +26,7 @@ int main(int argc, char** argv) {
 	unsigned port = 2713;
 	if(socket.bind(port) != sf::Socket::Done) return (EXIT_FAILURE);
 	sf::IpAddress serverAdress = "127.0.0.1";
+	vector<Object*> objects(10);
 	thread t1(clientRecv, std::ref(objects), port + 1, serverAdress);
 
 
@@ -42,7 +43,7 @@ int main(int argc, char** argv) {
         Player p2B(world, 0.7 * PH_WIDTH, sf::Color::Red, "Virgile");
         Player p3A(world, 0.4 * PH_WIDTH, sf::Color::Yellow, "Bernard");
         Player p3B(world, 0.6 * PH_WIDTH, sf::Color::Yellow, "Roger");
-        vector<Object*> objects {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &go1, &go2, &p3A, &p3B};
+        objects = {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &go1, &go2, &p3A, &p3B};
         bool roundActive = true;
         int lastFrames = 100;
         string endMessage;

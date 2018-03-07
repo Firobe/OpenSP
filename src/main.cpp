@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 	sf::Clock clock;
 
 	sf::UdpSocket socket;
-	unsigned port = 2713;
+	unsigned port = isServer ? 2713 : 4678;
 	if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
 	sf::IpAddress serverAdress = argv[1];
 	vector<Object*> objects(10);
@@ -115,17 +115,19 @@ int main(int argc, char** argv) {
 				}
 			}
 
-            if (roundActive)
-                world.Step(elapsed, 8 * 10, 3 * 10);
-            else
-                world.Step(elapsed / 4, 8, 3);
+			if(not isServer or clients.size() > 1) {
+				if (roundActive)
+					world.Step(elapsed, 8 * 10, 3 * 10);
+				else
+					world.Step(elapsed / 4, 8, 3);
 
-            window.clear();
+				window.clear();
 
-            for (auto && ob : objects) {
-                ob->update();
-                ob->render(window);
-            }
+				for (auto && ob : objects) {
+					ob->update();
+					ob->render(window);
+				}
+			}
 
             Text::drawText(window, "Round " + to_string(roundNb), sf::Vector2f(0, 0), 24, false);
             Text::drawText(window, "FPS : " + to_string(static_cast<int>(1./elapsed)),

@@ -22,6 +22,13 @@ int main(int argc, char** argv) {
     int score1 = 0, score2 = 0;
 	sf::Clock clock;
 
+	sf::UdpSocket socket;
+	unsigned port = 2713;
+	if(socket.bind(port) != sf::Socket::Done) return (EXIT_FAILURE);
+	sf::IpAddress serverAdress = "127.0.0.1";
+	thread t1(clientRecv, std::ref(objects), port + 1, serverAdress);
+
+
     while (score1 < 5 and score2 < 5) {
         b2Vec2 gravity(0., 9.81);
         b2World world(gravity);
@@ -39,12 +46,7 @@ int main(int argc, char** argv) {
         bool roundActive = true;
         int lastFrames = 100;
         string endMessage;
-		sf::UdpSocket socket;
-		unsigned port = 2713;
-		if(socket.bind(port) != sf::Socket::Done) return (EXIT_FAILURE);
-		sf::IpAddress serverAdress = "127.0.0.1";
-		thread t1(clientRecv, std::ref(objects), port + 1, serverAdress);
-
+		
         while (window.isOpen() and lastFrames > 0) {
             sf::Event event;
 

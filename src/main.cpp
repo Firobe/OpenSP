@@ -19,7 +19,9 @@ int main(int argc, char** argv) {
 	if(argv[1] == string("server"))
 		isServer = true;
     srand(time(0));
-    sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenSP");
+	sf::RenderWindow* window;
+	if(not isServer)
+		window = new sf::RenderWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenSP");
     Text::init();
     unsigned roundNb = 1;
     int score1 = 0, score2 = 0;
@@ -62,7 +64,7 @@ int main(int argc, char** argv) {
         string endMessage;
 		float accumulated = 0;
 		
-        while (window.isOpen() and lastFrames > 0) {
+        while ((isServer or window->isOpen()) and lastFrames > 0) {
             sf::Event event;
 
             if (rand() % 70 == 0) {
@@ -72,9 +74,9 @@ int main(int argc, char** argv) {
 				mtx.unlock();
             }
 
-            while (window.pollEvent(event)) {
+            while (not isServer and window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
-                    window.close();
+                    window->close();
 
                 if (event.type == sf::Event::KeyPressed) {
 					input in = input::connect;
@@ -106,7 +108,7 @@ int main(int argc, char** argv) {
 						in = input::p4;
 					}
 
-					if(not isServer and in != input::connect) {
+					if(in != input::connect) {
 						sf::Packet p;
 						Event e(in);
 						p << e;
@@ -136,27 +138,30 @@ int main(int argc, char** argv) {
 				else
 					world.Step(elapsed / 4, 8, 3);
 
-				window.clear();
+				if(not isServer) window->clear();
 
 				for (auto && ob : objects) {
 					ob->update();
-					ob->render(window);
+					if(not isServer) ob->render(*window);
 				}
 				mtx.unlock();
 			}
 
-            Text::drawText(window, "Round " + to_string(roundNb), sf::Vector2f(0, 0), 24, false);
-            Text::drawText(window, "FPS : " + to_string(static_cast<int>(1./elapsed)),
-					sf::Vector2f(0, SCREEN_HEIGHT - 30), 24, false);
-            Text::drawText(window, to_string(score1) + " - " + to_string(score2),
-                           sf::Vector2f(SCREEN_WIDTH / 2, 0.05 * SCREEN_HEIGHT), 45);
-
             if (!roundActive) {
                 lastFrames--;
-                Text::drawText(window, endMessage, sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), 40);
+                if(not isServer)
+					Text::drawText(*window, endMessage, sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), 40);
             }
 
-            window.display();
+			if(not isServer) {
+				Text::drawText(*window, "Round " + to_string(roundNb), sf::Vector2f(0, 0), 24, false);
+				Text::drawText(*window, "FPS : " + to_string(static_cast<int>(1./elapsed)),
+						sf::Vector2f(0, SCREEN_HEIGHT - 30), 24, false);
+				Text::drawText(*window, to_string(score1) + " - " + to_string(score2),
+							   sf::Vector2f(SCREEN_WIDTH / 2, 0.05 * SCREEN_HEIGHT), 45);
+
+				window->display();
+			}
 
             if (roundActive) {
                 if (ball.outOfBounds()) {
@@ -179,8 +184,6 @@ int main(int argc, char** argv) {
         }
 
         ++roundNb;
-
-        if (!window.isOpen()) break;
     }
 
     return 0;

@@ -50,6 +50,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<sf::IpAddress>&
 		sf::Packet p;
 		if( socket.receive(p, sender, port) != sf::Socket::Done)
 			exit(1);
+		std::cout << "Ouille" << std::endl;
 		if(p1A != nullptr) {
 			sf::Uint8 id;
 			sf::Uint8 in;

@@ -39,7 +39,6 @@ int main(int argc, char** argv) {
 		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
 		t.detach();
 	} else {
-
 		thread t(clientRecv, std::ref(objects), std::ref(mtx), port, serverAdress);
 		t.detach();
 	}

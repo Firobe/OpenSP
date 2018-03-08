@@ -37,7 +37,8 @@ int main(int argc, char** argv) {
 		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
 		t.detach();
 	} else {
-		thread t(clientRecv, std::ref(objects), std::ref(mtx), port + 1, serverAdress);
+
+		thread t(clientRecv, std::ref(objects), std::ref(mtx), port, serverAdress);
 		t.detach();
 	}
 
@@ -124,7 +125,7 @@ int main(int argc, char** argv) {
 					sf::Packet p;
 					p << objects;
 					for(auto&& ip : clients)
-						socket.send(p, ip, port + 1);
+						socket.send(p, ip, port);
 					accumulated = 0;
 				}
 			}

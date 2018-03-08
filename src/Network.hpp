@@ -7,14 +7,20 @@
 
 enum input : sf::Uint8 { p1, p2, p3, p4, connect};
 
+#define P1 0
+#define P2 1
+#define P3 2
+#define P4 3
+
 struct Event {
-	Event(input i, sf::Uint8 id = sf::Uint8(0)) : in(i), id(id) {}
-	input in;
+	Event(sf::Uint8 i, sf::Uint8 id) : in(i), id(id) {}
+	sf::Uint8 in;
 	sf::Uint8 id;
 };
 
 sf::Packet& operator << (sf::Packet& packet, const Event& e){
-	return packet << e.id << e.in;
+	packet << e.id << e.in;
+	return packet;
 }
 
 void clientRecv(std::vector<Object*>& objects, std::mutex& mtx, unsigned expectedPort, sf::IpAddress serverAdress) {
@@ -45,21 +51,21 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<sf::IpAddress>&
 		if( socket.receive(p, sender, port) != sf::Socket::Done)
 			exit(1);
 		if(p1A != nullptr) {
-			sf::Uint8 id = 2;
-			sf::Uint8 in = 2;
+			sf::Uint8 id;
+			sf::Uint8 in;
 			p >> id >> in;
 			mtx.lock();
 			clients.insert(sender);
-			if(in == input::p1){
+			if(in == P1){
 				(*p1A)->jump();
 			}
-			else if(in == input::p2){
+			else if(in == P2){
 				(*p1B)->jump();
 			}
-			else if(in == input::p3){
+			else if(in == P3){
 				(*p2A)->jump();
 			}
-			else if(in == input::p4){
+			else if(in == P4){
 				(*p2B)->jump();
 			}
 			else std::cout << "grou" << std::endl;

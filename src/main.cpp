@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 	sf::Clock clock;
 
 	sf::UdpSocket socket;
-	unsigned port = 2724;
+	unsigned port = 2713;
 	//if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
 	sf::IpAddress serverAdress = argv[1];
 	vector<Object*> objects(8);
@@ -39,7 +39,8 @@ int main(int argc, char** argv) {
 		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
 		t.detach();
 	} else {
-		thread t(clientRecv, std::ref(objects), std::ref(mtx), port + 1, serverAdress);
+
+		thread t(clientRecv, std::ref(objects), std::ref(mtx), port, serverAdress);
 		t.detach();
 	}
 
@@ -79,38 +80,38 @@ int main(int argc, char** argv) {
                     window->close();
 
                 if (event.type == sf::Event::KeyPressed) {
-					input in = input::connect;
+					sf::Uint8 in = 1;
                     if (event.key.code == sf::Keyboard::Q) {
 						mtx.lock();
                         p1A.jump();
 						mtx.unlock();
-						in = input::p1;
+						in = P1;
 					}
 
                     if (event.key.code == sf::Keyboard::D) {
 						mtx.lock();
                         p1B.jump();
 						mtx.unlock();
-						in = input::p2;
+						in = P2;
 					}
 
                     if (event.key.code == sf::Keyboard::Right) {
 						mtx.lock();
                         p2A.jump();
 						mtx.unlock();
-						in = input::p3;
+						in = P3;
 					}
 
                     if (event.key.code == sf::Keyboard::Left) {
 						mtx.lock();
                         p2B.jump();
 						mtx.unlock();
-						in = input::p4;
+						in = P4;
 					}
 
 					if(in != input::connect) {
 						sf::Packet p;
-						Event e(in);
+						Event e(in, 42);
 						p << e;
 						cout << e.in << endl;
 						socket.send(p, serverAdress, port);
@@ -122,11 +123,11 @@ int main(int argc, char** argv) {
 
 			if(isServer) {
 				accumulated += elapsed;
-				if (accumulated >= 0.5) {
+				if (accumulated >= 1./128.) {
 					sf::Packet p;
 					p << objects;
 					for(auto&& ip : clients)
-						socket.send(p, ip, port + 1);
+						socket.send(p, ip, port);
 					accumulated = 0;
 				}
 			}

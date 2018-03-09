@@ -29,6 +29,7 @@ void clientRecv(sf::UdpSocket* socket, std::vector<Object*>& objects, std::mutex
 		sf::Packet p;
 		if( socket->receive(p, sender, port) != sf::Socket::Done)
 			exit(1);
+		std::cout << "grumeau" << std::endl;
 		if(sender == serverAdress) {
 			mtx.lock();
 			p >> objects;
@@ -90,6 +91,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<Client>& client
 			}*/
 			mtx.unlock();
 		}
+		break;
 	}
 }
 

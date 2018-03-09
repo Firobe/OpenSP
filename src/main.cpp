@@ -129,7 +129,8 @@ int main(int argc, char** argv) {
 					sf::Packet p;
 					p << objects;
 					for(auto&& client : clients) {
-						socket.send(p, client.ip, client.port); 
+						if(socket.send(p, client.ip, client.port != sf::Socket::Done))
+								cout << "HNNNNNNNNG" << endl;
 						std::cout << "Sending to clients " << client.ip.toString() << " " << client.port << std::endl;
 					}
 					accumulated = 0;

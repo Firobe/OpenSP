@@ -75,23 +75,8 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<Client>& client
 				(*p2B)->jump();
 			}
 			else std::cout << "grou" << std::endl;
-			/*switch(in) {
-				case p1:
-					(*p1A)->jump();
-					break;
-				case p2:
-					(*p1B)->jump();
-					break;
-				case p3:
-					(*p2A)->jump();
-					break;
-				case p4:
-					(*p2B)->jump();
-					break;
-			}*/
 			mtx.unlock();
 		}
-		break;
 	}
 }
 

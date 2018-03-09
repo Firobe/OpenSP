@@ -32,7 +32,8 @@ int main(int argc, char** argv) {
 	sf::Packet p;
 	p << Event(CONNECT, 0);
 	sf::IpAddress serverAdress = argv[1];
-	socket.send(p, serverAdress, port);
+	if(not isServer)
+		socket.send(p, serverAdress, port);
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
 	set<Client> clients;

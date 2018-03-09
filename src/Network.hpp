@@ -5,12 +5,11 @@
 #include <thread>
 #include <mutex>
 
-enum input : sf::Uint8 { p1, p2, p3, p4, connect};
-
 #define P1 0
 #define P2 1
 #define P3 2
 #define P4 3
+#define CONNECT 5
 
 struct Event {
 	Event(sf::Uint8 i, sf::Uint8 id) : in(i), id(id) {}
@@ -23,9 +22,7 @@ sf::Packet& operator << (sf::Packet& packet, const Event& e){
 	return packet;
 }
 
-void clientRecv(std::vector<Object*>& objects, std::mutex& mtx, unsigned expectedPort, sf::IpAddress serverAdress) {
-	sf::UdpSocket socket;
-	if(socket.bind(expectedPort) != sf::Socket::Done) exit(1);
+void clientRecv(sf::UdpSocket& socket, std::vector<Object*>& objects, std::mutex& mtx, sf::IpAddress serverAdress) {
 	sf::IpAddress sender;
 	short unsigned port;
 	while(true) {
@@ -40,15 +37,22 @@ void clientRecv(std::vector<Object*>& objects, std::mutex& mtx, unsigned expecte
 	}
 }
 
-void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<sf::IpAddress>& clients,
+struct Client {
+	sf::IpAddress ip;
+	short unsigned port;
+	bool operator<(const Client& c) const {
+		return ip.toInteger() < c.ip.toInteger();
+	}
+};
+
+void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<Client>& clients,
 		Player** p1A, Player** p1B, Player** p2A, Player** p2B) {
 	sf::UdpSocket socket;
 	if(socket.bind(expectedPort) != sf::Socket::Done) exit(1);
-	sf::IpAddress sender;
-	short unsigned port;
+	Client client;
 	while(true) {
 		sf::Packet p;
-		if( socket.receive(p, sender, port) != sf::Socket::Done)
+		if( socket.receive(p, client.ip, client.port) != sf::Socket::Done)
 			exit(1);
 		std::cout << "Ouille" << std::endl;
 		if(p1A != nullptr) {
@@ -56,7 +60,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<sf::IpAddress>&
 			sf::Uint8 in;
 			p >> id >> in;
 			mtx.lock();
-			clients.insert(sender);
+			clients.insert(client);
 			if(in == P1){
 				(*p1A)->jump();
 			}

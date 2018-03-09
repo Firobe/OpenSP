@@ -29,17 +29,20 @@ int main(int argc, char** argv) {
 
 	sf::UdpSocket socket;
 	unsigned port = 2713;
-	//if(socket.bind(isServer ? port + 1 : port) != sf::Socket::Done) return (EXIT_FAILURE);
+	sf::Packet p;
+	p << Event(CONNECT, 0);
 	sf::IpAddress serverAdress = argv[1];
+	socket.send(p, serverAdress, port);
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
-	set<sf::IpAddress> clients;
+	set<Client> clients;
 	mutex mtx;
 	if(isServer) {
 		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
 		t.detach();
 	} else {
-		thread t(clientRecv, std::ref(objects), std::ref(mtx), port, serverAdress);
+		thread t(clientRecv, std::ref(socket),
+				std::ref(objects), std::ref(mtx), serverAdress);
 		t.detach();
 	}
 
@@ -79,7 +82,7 @@ int main(int argc, char** argv) {
                     window->close();
 
                 if (event.type == sf::Event::KeyPressed) {
-					sf::Uint8 in = 1;
+					sf::Uint8 in = CONNECT;
                     if (event.key.code == sf::Keyboard::Q) {
 						mtx.lock();
                         p1A.jump();
@@ -108,7 +111,7 @@ int main(int argc, char** argv) {
 						in = P4;
 					}
 
-					if(in != input::connect) {
+					if(in != CONNECT) {
 						sf::Packet p;
 						Event e(in, 42);
 						p << e;
@@ -125,8 +128,8 @@ int main(int argc, char** argv) {
 				if (accumulated >= 1./128.) {
 					sf::Packet p;
 					p << objects;
-					for(auto&& ip : clients)
-						socket.send(p, ip, port);
+					for(auto&& client : clients)
+						socket.send(p, client.ip, client.port);
 					accumulated = 0;
 				}
 			}

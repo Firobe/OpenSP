@@ -49,11 +49,13 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 
     while (true) {
         if (selector.wait()) {
+            mtx.lock();
+
             if (selector.isReady(listener)) { //Incoming connection
                 sf::TcpSocket* client = new sf::TcpSocket();
 
                 if (listener.accept(*client) == sf::Socket::Done) {
-					std::cout << "A new client connected" << std::endl;
+                    std::cout << "A new client connected" << std::endl;
                     clients.push_back(client);
                     selector.add(*client);
                 }
@@ -66,12 +68,12 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 
                         if (c->receive(p) == sf::Socket::Done) {
                             //PROCESS DATA
-							std::cout << "Ouille" << std::endl;
+                            std::cout << "Ouille" << std::endl;
+
                             if (p1A != nullptr) {
                                 sf::Uint8 id;
                                 sf::Uint8 in;
                                 p >> id >> in;
-                                mtx.lock();
 
                                 if (in == P1)
                                     (*p1A)->jump();
@@ -81,11 +83,11 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
                                     (*p2A)->jump();
                                 else if (in == P4)
                                     (*p2B)->jump();
-                                mtx.unlock();
                             }
                         }
                     }
             }
+            mtx.unlock();
         }
     }
 }

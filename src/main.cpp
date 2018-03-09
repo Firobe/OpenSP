@@ -35,7 +35,6 @@ int main(int argc, char** argv) {
 			exit(1);
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
-	sf::TcpSocket* client = nullptr;
 	vector<sf::TcpSocket*> clients;
 	mutex mtx;
 	if(isServer) {
@@ -129,17 +128,23 @@ int main(int argc, char** argv) {
 				if (accumulated >= 1./128.) {
 					sf::Packet p;
 					p << objects;
+					int toDelete = 0;
+					mtx.lock();
 					for(sf::TcpSocket* c : clients) {
 						cout << "bonsoir" << endl;
-						if(c->send(p) != sf::Socket::Done)
-								cout << "HNNNNNNNNG" << endl;
-						//std::cout << "Sending to clients " << client.ip.toString() << " " << client.port << std::endl;
+						if(c->send(p) == sf::Socket::Disconnected) {
+							delete c;
+							c = *(clients.end() - 1 - toDelete);
+							++toDelete;
+						}
 					}
+					clients.resize(clients.size() - toDelete);
+					mtx.unlock();
 					accumulated = 0;
 				}
 			}
 
-			if(not isServer or client != nullptr) {
+			if(not isServer or clients.size() > 0) {
 				mtx.lock();
 				if (roundActive)
 					world.Step(elapsed, 8 * 10, 3 * 10);

@@ -29,19 +29,17 @@ int main(int argc, char** argv) {
 
 	sf::TcpSocket socket;
 	unsigned port = 2713;
-	sf::Packet p;
-	p << Event(CONNECT, 0);
 	sf::IpAddress serverAdress = argv[1];
-	if(not isServer) {
-		if(socket.connect(serverAdress, port) != sf::Socket::Done) exit(1);
-		socket.send(p);
-	}
+	if(not isServer)
+		if(socket.connect(serverAdress, port) != sf::Socket::Done)
+			exit(1);
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
 	sf::TcpSocket* client = nullptr;
+	vector<sf::TcpSocket*> clients;
 	mutex mtx;
 	if(isServer) {
-		thread t(serverRecv, port, std::ref(mtx), client, &pp1A, &pp1B, &pp2A, &pp2B);
+		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
 		t.detach();
 	} else {
 		thread t(clientRecv, &socket,
@@ -131,8 +129,9 @@ int main(int argc, char** argv) {
 				if (accumulated >= 1./128.) {
 					sf::Packet p;
 					p << objects;
-					if(client != nullptr) {
-						if(client->send(p) != sf::Socket::Done)
+					for(sf::TcpSocket* c : clients) {
+						cout << "bonsoir" << endl;
+						if(c->send(p) != sf::Socket::Done)
 								cout << "HNNNNNNNNG" << endl;
 						//std::cout << "Sending to clients " << client.ip.toString() << " " << client.port << std::endl;
 					}

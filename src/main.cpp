@@ -36,7 +36,6 @@ int main(int argc, char** argv) {
 		if(socket.bind(sf::Socket::AnyPort) != sf::Socket::Done) exit(1);
 		socket.send(p, serverAdress, port);
 		std::cout << socket.getLocalPort() << std::endl;
-		socket
 	}
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;

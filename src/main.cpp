@@ -32,8 +32,12 @@ int main(int argc, char** argv) {
 	sf::Packet p;
 	p << Event(CONNECT, 0);
 	sf::IpAddress serverAdress = argv[1];
-	if(not isServer)
+	if(not isServer) {
+		if(socket.bind(sf::Socket::AnyPort) != sf::Socket::Done) exit(1);
 		socket.send(p, serverAdress, port);
+		std::cout << socket.getLocalPort() << std::endl;
+		socket
+	}
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
 	set<Client> clients;

@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
 		t.detach();
 	} else {
-		thread t(clientRecv, std::ref(socket),
+		thread t(clientRecv, &socket,
 				std::ref(objects), std::ref(mtx), serverAdress);
 		t.detach();
 	}
@@ -128,8 +128,10 @@ int main(int argc, char** argv) {
 				if (accumulated >= 1./128.) {
 					sf::Packet p;
 					p << objects;
-					for(auto&& client : clients)
-						socket.send(p, client.ip, client.port);
+					for(auto&& client : clients) {
+						socket.send(p, client.ip, client.port); 
+						std::cout << "Sending to clients " << client.ip.toString() << " " << client.port << std::endl;
+					}
 					accumulated = 0;
 				}
 			}

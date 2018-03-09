@@ -22,12 +22,12 @@ sf::Packet& operator << (sf::Packet& packet, const Event& e){
 	return packet;
 }
 
-void clientRecv(sf::UdpSocket& socket, std::vector<Object*>& objects, std::mutex& mtx, sf::IpAddress serverAdress) {
+void clientRecv(sf::UdpSocket* socket, std::vector<Object*>& objects, std::mutex& mtx, sf::IpAddress serverAdress) {
 	sf::IpAddress sender;
 	short unsigned port;
 	while(true) {
 		sf::Packet p;
-		if( socket.receive(p, sender, port) != sf::Socket::Done)
+		if( socket->receive(p, sender, port) != sf::Socket::Done)
 			exit(1);
 		if(sender == serverAdress) {
 			mtx.lock();
@@ -54,7 +54,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<Client>& client
 		sf::Packet p;
 		if( socket.receive(p, client.ip, client.port) != sf::Socket::Done)
 			exit(1);
-		std::cout << "Ouille" << std::endl;
+		std::cout << "Ouille" << client.ip.toString() << " " << client.port << std::endl;
 		if(p1A != nullptr) {
 			sf::Uint8 id;
 			sf::Uint8 in;

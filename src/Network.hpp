@@ -38,7 +38,7 @@ void clientRecv(sf::TcpSocket* socket, std::vector<Object*>& objects, std::mutex
 }
 
 void serverRecv(unsigned expectedPort, std::mutex& mtx,
-                std::vector<sf::TcpSocket*> clients,
+                std::vector<sf::TcpSocket*>& clients,
                 Player** p1A, Player** p1B, Player** p2A, Player** p2B) {
     sf::TcpListener listener;
 
@@ -53,6 +53,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
                 sf::TcpSocket* client = new sf::TcpSocket();
 
                 if (listener.accept(*client) == sf::Socket::Done) {
+					std::cout << "A new client connected" << std::endl;
                     clients.push_back(client);
                     selector.add(*client);
                 }
@@ -65,6 +66,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 
                         if (c->receive(p) == sf::Socket::Done) {
                             //PROCESS DATA
+							std::cout << "Ouille" << std::endl;
                             if (p1A != nullptr) {
                                 sf::Uint8 id;
                                 sf::Uint8 in;
@@ -79,8 +81,6 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
                                     (*p2A)->jump();
                                 else if (in == P4)
                                     (*p2B)->jump();
-                                else std::cout << "grou" << std::endl;
-
                                 mtx.unlock();
                             }
                         }

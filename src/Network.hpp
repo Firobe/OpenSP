@@ -1,8 +1,8 @@
 #ifndef NETWORK_HPP
 #define NETWORK_HPP
 
-#include <set>
 #include <thread>
+#include <vector>
 #include <mutex>
 
 #define P1 0
@@ -22,19 +22,15 @@ sf::Packet& operator << (sf::Packet& packet, const Event& e){
 	return packet;
 }
 
-void clientRecv(sf::UdpSocket* socket, std::vector<Object*>& objects, std::mutex& mtx, sf::IpAddress serverAdress) {
-	sf::IpAddress sender;
-	short unsigned port;
+void clientRecv(sf::TcpSocket* socket, std::vector<Object*>& objects, std::mutex& mtx, sf::IpAddress serverAdress) {
 	while(true) {
 		sf::Packet p;
-		if( socket->receive(p, sender, port) != sf::Socket::Done)
+		if( socket->receive(p) != sf::Socket::Done)
 			exit(1);
 		std::cout << "grumeau" << std::endl;
-		if(sender == serverAdress) {
 			mtx.lock();
 			p >> objects;
 			mtx.unlock();
-		}
 	}
 }
 
@@ -46,36 +42,38 @@ struct Client {
 	}
 };
 
-void serverRecv(unsigned expectedPort, std::mutex& mtx, std::set<Client>& clients,
+void serverRecv(unsigned expectedPort, std::mutex& mtx, sf::TcpSocket* client,
 		Player** p1A, Player** p1B, Player** p2A, Player** p2B) {
-	sf::UdpSocket socket;
-	if(socket.bind(expectedPort) != sf::Socket::Done) exit(1);
-	Client client;
+	sf::TcpListener listener;
+	if(listener.listen(expectedPort) != sf::Socket::Done) exit(1);
+	client = new sf::TcpSocket();
 	while(true) {
-		sf::Packet p;
-		if( socket.receive(p, client.ip, client.port) != sf::Socket::Done)
-			exit(1);
-		std::cout << "Ouille" << client.ip.toString() << " " << client.port << std::endl;
-		if(p1A != nullptr) {
-			sf::Uint8 id;
-			sf::Uint8 in;
-			p >> id >> in;
-			mtx.lock();
-			clients.insert(client);
-			if(in == P1){
-				(*p1A)->jump();
+		if(listener.accept(*client) != sf::Socket::Done) exit(1);
+		while(true) {
+			sf::Packet p;
+			if( client->receive(p) != sf::Socket::Done)
+				exit(1);
+			//std::cout << "Ouille" << client.ip.toString() << " " << client.port << std::endl;
+			if(p1A != nullptr) {
+				sf::Uint8 id;
+				sf::Uint8 in;
+				p >> id >> in;
+				mtx.lock();
+				if(in == P1){
+					(*p1A)->jump();
+				}
+				else if(in == P2){
+					(*p1B)->jump();
+				}
+				else if(in == P3){
+					(*p2A)->jump();
+				}
+				else if(in == P4){
+					(*p2B)->jump();
+				}
+				else std::cout << "grou" << std::endl;
+				mtx.unlock();
 			}
-			else if(in == P2){
-				(*p1B)->jump();
-			}
-			else if(in == P3){
-				(*p2A)->jump();
-			}
-			else if(in == P4){
-				(*p2B)->jump();
-			}
-			else std::cout << "grou" << std::endl;
-			mtx.unlock();
 		}
 	}
 }

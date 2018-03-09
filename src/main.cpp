@@ -27,22 +27,21 @@ int main(int argc, char** argv) {
     int score1 = 0, score2 = 0;
 	sf::Clock clock;
 
-	sf::UdpSocket socket;
+	sf::TcpSocket socket;
 	unsigned port = 2713;
 	sf::Packet p;
 	p << Event(CONNECT, 0);
 	sf::IpAddress serverAdress = argv[1];
 	if(not isServer) {
-		if(socket.bind(sf::Socket::AnyPort) != sf::Socket::Done) exit(1);
-		socket.send(p, serverAdress, port);
-		std::cout << socket.getLocalPort() << std::endl;
+		if(socket.connect(serverAdress, port) != sf::Socket::Done) exit(1);
+		socket.send(p);
 	}
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
-	set<Client> clients;
+	sf::TcpSocket* client = nullptr;
 	mutex mtx;
 	if(isServer) {
-		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
+		thread t(serverRecv, port, std::ref(mtx), client, &pp1A, &pp1B, &pp2A, &pp2B);
 		t.detach();
 	} else {
 		thread t(clientRecv, &socket,
@@ -120,7 +119,7 @@ int main(int argc, char** argv) {
 						Event e(in, 42);
 						p << e;
 						cout << e.in << endl;
-						socket.send(p, serverAdress, port);
+						socket.send(p);
 					}
                 }
             }
@@ -132,16 +131,16 @@ int main(int argc, char** argv) {
 				if (accumulated >= 1./128.) {
 					sf::Packet p;
 					p << objects;
-					for(auto&& client : clients) {
-						if(socket.send(p, client.ip, client.port != sf::Socket::Done))
+					if(client != nullptr) {
+						if(client->send(p) != sf::Socket::Done)
 								cout << "HNNNNNNNNG" << endl;
-						std::cout << "Sending to clients " << client.ip.toString() << " " << client.port << std::endl;
+						//std::cout << "Sending to clients " << client.ip.toString() << " " << client.port << std::endl;
 					}
 					accumulated = 0;
 				}
 			}
 
-			if(not isServer or clients.size() > 0) {
+			if(not isServer or client != nullptr) {
 				mtx.lock();
 				if (roundActive)
 					world.Step(elapsed, 8 * 10, 3 * 10);

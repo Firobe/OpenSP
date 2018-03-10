@@ -70,7 +70,7 @@ int main(int argc, char** argv) {
         while ((isServer or window->isOpen()) and lastFrames > 0) {
             sf::Event event;
 
-            if (rand() % 70 == 0) {
+            if (isServer and rand() % 7000 == 0) {
 				mtx.lock();
                 p3A.jump();
                 p3B.jump();

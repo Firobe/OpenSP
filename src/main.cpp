@@ -131,7 +131,6 @@ int main(int argc, char** argv) {
 					int toDelete = 0;
 					mtx.lock();
 					for(sf::TcpSocket* c : clients) {
-						cout << "bonsoir" << endl;
 						if(c->send(p) == sf::Socket::Disconnected) {
 							delete c;
 							c = *(clients.end() - 1 - toDelete);

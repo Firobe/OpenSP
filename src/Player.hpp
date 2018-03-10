@@ -29,7 +29,7 @@ public:
 		revDef.localAnchorA.Set(+_width/2, -_height);
 		revDef.localAnchorB.Set(-_width/2, -_height);
 		revDef.enableMotor = true;
-		revDef.maxMotorTorque = 5000;
+		revDef.maxMotorTorque = 0;
 		revDef.motorSpeed = 36000;
 
 		legs = (b2RevoluteJoint*) world.CreateJoint(&revDef);
@@ -58,6 +58,7 @@ public:
 		float unitY = strength * -cos(angle);
 		_leftLeg._body->ApplyLinearImpulse(
 				b2Vec2(unitX, unitY), _leftLeg._body->GetWorldCenter(), true);
+		legs->SetMaxMotorTorque(legs->GetMaxMotorTorque() + 0.05);
 	}
 	sf::Packet& output(sf::Packet& p) const override {
 		_leftLeg.output(p);

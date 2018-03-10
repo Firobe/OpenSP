@@ -33,6 +33,9 @@ public:
         _sprite->setFillColor(_color);
         _sprite->setOrigin(size / 2.f);
     }
+
+	sf::Packet& output(sf::Packet& p) const { return p; }
+	sf::Packet& input(sf::Packet& p) { return p; }
 };
 
 #endif

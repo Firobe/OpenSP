@@ -33,11 +33,13 @@ public:
 	virtual ~Object() {
 		delete _sprite;
 	}
+	virtual sf::Packet& output(sf::Packet& packet) const;
+	virtual sf::Packet& input(sf::Packet& packet);
+	friend sf::Packet& operator << (sf::Packet& packet, const Object&);
+	friend sf::Packet& operator >> (sf::Packet& packet, Object&);
 	
 };
 
-sf::Packet& operator << (sf::Packet& packet, const Object& o);
-sf::Packet& operator >> (sf::Packet& packet, Object& o);
 sf::Packet& operator << (sf::Packet& packet, const std::vector<Object*> v);
 sf::Packet& operator >> (sf::Packet& packet, std::vector<Object*> v);
 

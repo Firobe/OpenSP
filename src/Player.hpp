@@ -33,8 +33,10 @@ public:
 		legs = (b2RevoluteJoint*) world.CreateJoint(&revDef);
 
 		// Initial rotation
+		/*
 		float angle = (rand() % 21 - 10) / 30.;
 		_body->ApplyAngularImpulse(angle, true);
+		*/
     }
 	void render(sf::RenderWindow& window) {
 		_leftLeg.render(window);
@@ -52,7 +54,16 @@ public:
 		float strength = 20;
 		float unitX = strength * sin(angle);
 		float unitY = strength * -cos(angle);
-		_body->ApplyLinearImpulse(b2Vec2(unitX, unitY), _leftLeg._body->GetWorldCenter(), true);
+		_leftLeg._body->ApplyLinearImpulse(
+				b2Vec2(unitX, unitY), _leftLeg._body->GetWorldCenter(), true);
+	}
+	sf::Packet& output(sf::Packet& p) const override {
+		_leftLeg.output(p);
+		return _rightLeg.output(p);
+	}
+	sf::Packet& input(sf::Packet& p) override {
+		_leftLeg.input(p);
+		return _rightLeg.input(p);
 	}
 };
 

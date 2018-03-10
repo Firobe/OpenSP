@@ -28,7 +28,9 @@ public:
 		revDef.collideConnected = false;
 		revDef.localAnchorA.Set(+_width/2, -_height);
 		revDef.localAnchorB.Set(-_width/2, -_height);
-		revDef.referenceAngle = 20;
+		revDef.enableMotor = true;
+		revDef.maxMotorTorque = 5000;
+		revDef.motorSpeed = 36000;
 
 		legs = (b2RevoluteJoint*) world.CreateJoint(&revDef);
 

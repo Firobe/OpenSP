@@ -26,8 +26,8 @@ public:
 		revDef.bodyA = _leftLeg._body;
 		revDef.bodyB = _rightLeg._body;
 		revDef.collideConnected = false;
-		revDef.localAnchorA.Set(+_width/2, _height);
-		revDef.localAnchorB.Set(-_width/2, _height);
+		revDef.localAnchorA.Set(+_width/2, -_height);
+		revDef.localAnchorB.Set(-_width/2, -_height);
 		revDef.referenceAngle = 20;
 
 		legs = (b2RevoluteJoint*) world.CreateJoint(&revDef);

@@ -5,11 +5,15 @@
 #include <vector>
 #include <mutex>
 
-#define P1 0
-#define P2 1
-#define P3 2
-#define P4 3
-#define CONNECT 5
+#define CONNECT 0
+#define P1_PRESSED 1
+#define P2_PRESSED 2
+#define P3_PRESSED 3
+#define P4_PRESSED 4
+#define P1_RELEASED 5
+#define P2_RELEASED 6
+#define P3_RELEASED 7
+#define P4_RELEASED 8
 
 struct Event {
     Event(sf::Uint8 i, sf::Uint8 id) : in(i), id(id) {}
@@ -75,14 +79,22 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
                                 sf::Uint8 in;
                                 p >> id >> in;
 
-                                if (in == P1)
+                                if (in == P1_PRESSED)
                                     (*p1A)->jump();
-                                else if (in == P2)
+                                else if (in == P2_PRESSED)
                                     (*p1B)->jump();
-                                else if (in == P3)
+                                else if (in == P3_PRESSED)
                                     (*p2A)->jump();
-                                else if (in == P4)
+                                else if (in == P4_PRESSED)
                                     (*p2B)->jump();
+								else if (in == P1_RELEASED)
+                                    (*p1A)->unjump();
+                                else if (in == P2_RELEASED)
+                                    (*p1B)->unjump();
+                                else if (in == P3_RELEASED)
+                                    (*p2A)->unjump();
+                                else if (in == P4_RELEASED)
+                                    (*p2B)->unjump();
                             }
                         }
                     }

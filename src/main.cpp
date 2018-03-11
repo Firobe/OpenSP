@@ -20,8 +20,10 @@ int main(int argc, char** argv) {
 		isServer = true;
     srand(time(0));
 	sf::RenderWindow* window;
-	if(not isServer)
+	if(not isServer) {
 		window = new sf::RenderWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenSP");
+		window->setKeyRepeatEnabled(false);
+	}
     Text::init();
     unsigned roundNb = 1;
     int score1 = 0, score2 = 0;
@@ -81,44 +83,72 @@ int main(int argc, char** argv) {
                 if (event.type == sf::Event::Closed)
                     window->close();
 
+				sf::Uint8 in = CONNECT;
                 if (event.type == sf::Event::KeyPressed) {
-					sf::Uint8 in = CONNECT;
                     if (event.key.code == sf::Keyboard::Q) {
 						mtx.lock();
                         p1A.jump();
 						mtx.unlock();
-						in = P1;
+						in = P1_PRESSED;
 					}
 
                     if (event.key.code == sf::Keyboard::D) {
 						mtx.lock();
                         p1B.jump();
 						mtx.unlock();
-						in = P2;
+						in = P2_PRESSED;
 					}
 
                     if (event.key.code == sf::Keyboard::Right) {
 						mtx.lock();
                         p2A.jump();
 						mtx.unlock();
-						in = P3;
+						in = P3_PRESSED;
 					}
 
                     if (event.key.code == sf::Keyboard::Left) {
 						mtx.lock();
                         p2B.jump();
 						mtx.unlock();
-						in = P4;
-					}
-
-					if(in != CONNECT) {
-						sf::Packet p;
-						Event e(in, 42);
-						p << e;
-						cout << e.in << endl;
-						socket.send(p);
+						in = P4_PRESSED;
 					}
                 }
+                if (event.type == sf::Event::KeyReleased) {
+                    if (event.key.code == sf::Keyboard::Q) {
+						mtx.lock();
+                        p1A.unjump();
+						mtx.unlock();
+						in = P1_RELEASED;
+					}
+
+                    if (event.key.code == sf::Keyboard::D) {
+						mtx.lock();
+                        p1B.unjump();
+						mtx.unlock();
+						in = P2_RELEASED;
+					}
+
+                    if (event.key.code == sf::Keyboard::Right) {
+						mtx.lock();
+                        p2A.unjump();
+						mtx.unlock();
+						in = P3_RELEASED;
+					}
+
+                    if (event.key.code == sf::Keyboard::Left) {
+						mtx.lock();
+                        p2B.unjump();
+						mtx.unlock();
+						in = P4_RELEASED;
+					}
+                }
+				if(in != CONNECT) {
+					sf::Packet p;
+					Event e(in, 42);
+					p << e;
+					cout << e.in << endl;
+					socket.send(p);
+				}
             }
 
 			float elapsed = clock.restart().asSeconds();

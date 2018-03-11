@@ -21,7 +21,7 @@ private:
 	Culbuto _leftLeg, _rightLeg;
 	b2RevoluteJoint* rightJoint;
 	b2RevoluteJoint* leftJoint;
-	bool rightLooking;
+	bool rightLooking, jumping;
 public:
     Player(b2World& world, float initX, sf::Color c, std::string n, bool rightLooking) :
 		Object(world),
@@ -101,16 +101,29 @@ public:
 							abs(_body->GetLinearVelocity().x), 2)));
 	}
 	void jump() {
+		jumping = true;
 		float angle = _body->GetAngle();
-		float strength = 20;
+		float strength = 60;
 		float unitX = strength * sin(angle);
 		float unitY = strength * -cos(angle);
-		//_body->ApplyLinearImpulse(
-		//		b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
-		if(rightLooking)
-			rightJoint->SetMaxMotorTorque(rightJoint->GetMaxMotorTorque() + 0.5);
-		else
-			leftJoint->SetMaxMotorTorque(leftJoint->GetMaxMotorTorque() + 0.5);	
+		_body->ApplyLinearImpulse( b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
+	}
+	void update() {
+		if(jumping) {
+			if(rightLooking)
+				rightJoint->SetMaxMotorTorque(rightJoint->GetMaxMotorTorque() + 0.5);
+			else
+				leftJoint->SetMaxMotorTorque(leftJoint->GetMaxMotorTorque() + 0.5);	
+		}
+		else {
+			if(rightLooking)
+				rightJoint->SetMaxMotorTorque(rightJoint->GetMaxMotorTorque() - 0.5);
+			else
+				leftJoint->SetMaxMotorTorque(leftJoint->GetMaxMotorTorque() - 0.5);	
+		}
+	}
+	void unjump() {
+		jumping = false;
 	}
 	sf::Packet& output(sf::Packet& p) const override {
 		Object::output(p);

@@ -55,7 +55,7 @@ public:
 		revDef1.upperAngle = 0;
 		revDef1.lowerAngle = rightLooking ? (-90 * DEGTORAD) : 0;
 		revDef1.enableMotor = rightLooking;
-		revDef1.maxMotorTorque = 0;
+		revDef1.maxMotorTorque = 30;
 		revDef1.motorSpeed = 3600;
 
 		//Attach left

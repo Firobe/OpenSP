@@ -103,19 +103,19 @@ public:
     void update() {
         if (jumping) {
             if (rightLooking)
-                rightJoint->SetMotorSpeed(
-                    SPEED * (rightJoint->GetUpperLimit() - rightJoint->GetJointAngle()));
-            else
-                leftJoint->SetMotorSpeed(
-                    SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
-        }
-        else {
-            if (rightLooking)
 				rightJoint->SetMotorSpeed(
 					SPEED * (rightJoint->GetLowerLimit() - rightJoint->GetJointAngle()));
             else
                 leftJoint->SetMotorSpeed(
                     SPEED * (leftJoint->GetUpperLimit() - leftJoint->GetJointAngle()));
+        }
+        else {
+            if (rightLooking)
+                rightJoint->SetMotorSpeed(
+                    SPEED * (rightJoint->GetUpperLimit() - rightJoint->GetJointAngle()));
+            else
+                leftJoint->SetMotorSpeed(
+                    SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
         }
     }
     void jump() {

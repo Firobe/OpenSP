@@ -60,8 +60,8 @@ int main(int argc, char** argv) {
         Player p1B(world, 0.3 * PH_WIDTH, sf::Color::Blue, "Dorian", true);
         Player p2A(world, 0.8 * PH_WIDTH, sf::Color::Red, "Maxime", false);
         Player p2B(world, 0.7 * PH_WIDTH, sf::Color::Red, "Virgile", false);
-        Player p3A(world, 0.4 * PH_WIDTH, sf::Color::Yellow, "Bernard", true);
-        Player p3B(world, 0.6 * PH_WIDTH, sf::Color::Yellow, "Roger", false);
+        //Player p3A(world, 0.4 * PH_WIDTH, sf::Color::Yellow, "Bernard", true);
+        //Player p3B(world, 0.6 * PH_WIDTH, sf::Color::Yellow, "Roger", false);
         objects = {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &go1, &go2};
 		pp1A = &p1A; pp1B = &p1B; pp2A = &p2A; pp2B = &p2B;
         bool roundActive = true;
@@ -74,8 +74,8 @@ int main(int argc, char** argv) {
 
             if (isServer and rand() % 7000 == 0) {
 				mtx.lock();
-                p3A.jump();
-                p3B.jump();
+                //p3A.jump();
+                //p3B.jump();
 				mtx.unlock();
             }
 

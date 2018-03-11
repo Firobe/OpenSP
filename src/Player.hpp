@@ -100,7 +100,7 @@ public:
 		auto pos = _body->GetPosition();
 		Text::drawText(window, _name,
 				sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO),
-				std::min(200., pow(abs(_body->GetLinearVelocity().y) +
+				std::min(100., pow(abs(_body->GetLinearVelocity().y) +
 							abs(_body->GetLinearVelocity().x), 2)));
 	}
 	void jump() {

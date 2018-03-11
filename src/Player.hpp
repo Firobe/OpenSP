@@ -33,7 +33,7 @@ public:
 		// Main body
         b2BodyDef bDef;
         bDef.type = b2_dynamicBody;
-        bDef.position = b2Vec2(initX, 2*PH_HEIGHT/3);
+        bDef.position = b2Vec2(initX, 2*PH_HEIGHT/3 - _height);
         _body = _world.CreateBody(&bDef);
         b2PolygonShape shape;
         shape.SetAsBox(_width / 2, _height / 2, b2Vec2(0, -_height / 2.), 0.);

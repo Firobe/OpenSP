@@ -54,12 +54,12 @@ int main(int argc, char** argv) {
         Goal go1(world, 0.01 * PH_WIDTH, true);
         Goal go2(world, 0.98 * PH_WIDTH, false);
         Ball ball(world);
-        Player p1A(world, 0.2 * PH_WIDTH, sf::Color::Blue, "Hugo");
-        Player p1B(world, 0.3 * PH_WIDTH, sf::Color::Blue, "Dorian");
-        Player p2A(world, 0.8 * PH_WIDTH, sf::Color::Red, "Maxime");
-        Player p2B(world, 0.7 * PH_WIDTH, sf::Color::Red, "Virgile");
-        Player p3A(world, 0.4 * PH_WIDTH, sf::Color::Yellow, "Bernard");
-        Player p3B(world, 0.6 * PH_WIDTH, sf::Color::Yellow, "Roger");
+        Player p1A(world, 0.2 * PH_WIDTH, sf::Color::Blue, "Hugo", true);
+        Player p1B(world, 0.3 * PH_WIDTH, sf::Color::Blue, "Dorian", true);
+        Player p2A(world, 0.8 * PH_WIDTH, sf::Color::Red, "Maxime", false);
+        Player p2B(world, 0.7 * PH_WIDTH, sf::Color::Red, "Virgile", false);
+        Player p3A(world, 0.4 * PH_WIDTH, sf::Color::Yellow, "Bernard", true);
+        Player p3B(world, 0.6 * PH_WIDTH, sf::Color::Yellow, "Roger", false);
         objects = {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &p3A, &p3B, &go1, &go2};
 		pp1A = &p1A; pp1B = &p1B; pp2A = &p2A; pp2B = &p2B;
         bool roundActive = true;

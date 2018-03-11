@@ -56,7 +56,7 @@ public:
 		revDef1.upperAngle = 0;
 		revDef1.lowerAngle = rightLooking ? (-90 * DEGTORAD) : 0;
 		revDef1.enableMotor = rightLooking;
-		revDef1.maxMotorTorque = 0;
+		revDef1.maxMotorTorque = 50;
 		revDef1.motorSpeed = -3600;
 
 		//Attach left
@@ -70,7 +70,7 @@ public:
 		revDef2.lowerAngle = 0;
 		revDef2.upperAngle = rightLooking ? 0 : (90 * DEGTORAD);
 		revDef2.enableMotor = not rightLooking;
-		revDef2.maxMotorTorque = 0;
+		revDef2.maxMotorTorque = 50;
 		revDef2.motorSpeed = 3600;
 
 		rightJoint = (b2RevoluteJoint*) world.CreateJoint(&revDef1);
@@ -107,23 +107,13 @@ public:
 		float unitX = strength * sin(angle);
 		float unitY = strength * -cos(angle);
 		_body->ApplyLinearImpulse( b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
-	}
-	void update() {
-		if(jumping) {
-			if(rightLooking)
-				rightJoint->SetMaxMotorTorque(rightJoint->GetMaxMotorTorque() + 0.5);
-			else
-				leftJoint->SetMaxMotorTorque(leftJoint->GetMaxMotorTorque() + 0.5);	
-		}
-		else {
-			if(rightLooking)
-				rightJoint->SetMaxMotorTorque(rightJoint->GetMaxMotorTorque() - 0.5);
-			else
-				leftJoint->SetMaxMotorTorque(leftJoint->GetMaxMotorTorque() - 0.5);	
-		}
+		rightJoint->SetMotorSpeed(-rightJoint->GetMotorSpeed());
+		leftJoint->SetMotorSpeed(-leftJoint->GetMotorSpeed());
 	}
 	void unjump() {
 		jumping = false;
+		rightJoint->SetMotorSpeed(-rightJoint->GetMotorSpeed());
+		leftJoint->SetMotorSpeed(-leftJoint->GetMotorSpeed());
 	}
 	sf::Packet& output(sf::Packet& p) const override {
 		Object::output(p);

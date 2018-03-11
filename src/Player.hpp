@@ -50,13 +50,13 @@ public:
 		revDef1.bodyB = _rightLeg._body;
 		revDef1.collideConnected = false;
 		revDef1.localAnchorA.Set(+_width/2, 0);
-		revDef1.localAnchorB.Set(-_legWidth/2, -_legHeight);
+		revDef1.localAnchorB.Set(_legWidth/2, -_legHeight);
 		revDef1.enableLimit = true;
 		revDef1.lowerAngle = 0;
 		revDef1.upperAngle = rightLooking ? (90 * DEGTORAD) : 0;
 		revDef1.enableMotor = rightLooking;
 		revDef1.maxMotorTorque = 0;
-		revDef1.motorSpeed = 3600;
+		revDef1.motorSpeed = -3600;
 
 		//Attach left
 		b2RevoluteJointDef revDef2;
@@ -64,13 +64,13 @@ public:
 		revDef2.bodyB = _leftLeg._body;
 		revDef2.collideConnected = false;
 		revDef2.localAnchorA.Set(-_width/2, 0);
-		revDef2.localAnchorB.Set(+_legWidth/2, -_legHeight);
+		revDef2.localAnchorB.Set(-_legWidth/2, -_legHeight);
 		revDef2.enableLimit = true;
 		revDef2.upperAngle = 0;
 		revDef2.lowerAngle = rightLooking ? 0 : (-90 * DEGTORAD);
 		revDef2.enableMotor = not rightLooking;
 		revDef2.maxMotorTorque = 0;
-		revDef2.motorSpeed = -3600;
+		revDef2.motorSpeed = 3600;
 
 		rightJoint = (b2RevoluteJoint*) world.CreateJoint(&revDef1);
 		leftJoint = (b2RevoluteJoint*) world.CreateJoint(&revDef2);

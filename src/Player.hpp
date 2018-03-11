@@ -8,8 +8,8 @@
 #include "Text.hpp"
 #include "Culbuto.hpp"
 
-#define TORQUE 70
-#define SPEED 3600
+#define TORQUE 500
+#define SPEED 500
 #define JUMP_STRENGTH 50
 #define DEGTORAD (M_PI / 180.)
 
@@ -100,7 +100,7 @@ public:
 		auto pos = _body->GetPosition();
 		Text::drawText(window, _name,
 				sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO),
-				std::min(500., pow(abs(_body->GetLinearVelocity().y) +
+				std::min(200., pow(abs(_body->GetLinearVelocity().y) +
 							abs(_body->GetLinearVelocity().x), 2)));
 	}
 	void jump() {

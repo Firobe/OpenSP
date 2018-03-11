@@ -8,6 +8,9 @@
 #include "Text.hpp"
 #include "Culbuto.hpp"
 
+#define TORQUE 70
+#define SPEED 3600
+#define JUMP_STRENGTH 50
 #define DEGTORAD (M_PI / 180.)
 
 class Player : public Object {
@@ -56,8 +59,8 @@ public:
 		revDef1.upperAngle = 0;
 		revDef1.lowerAngle = rightLooking ? (-90 * DEGTORAD) : 0;
 		revDef1.enableMotor = rightLooking;
-		revDef1.maxMotorTorque = 50;
-		revDef1.motorSpeed = -3600;
+		revDef1.maxMotorTorque = TORQUE;
+		revDef1.motorSpeed = SPEED;
 
 		//Attach left
 		b2RevoluteJointDef revDef2;
@@ -70,8 +73,8 @@ public:
 		revDef2.lowerAngle = 0;
 		revDef2.upperAngle = rightLooking ? 0 : (90 * DEGTORAD);
 		revDef2.enableMotor = not rightLooking;
-		revDef2.maxMotorTorque = 50;
-		revDef2.motorSpeed = 3600;
+		revDef2.maxMotorTorque = TORQUE;
+		revDef2.motorSpeed = -SPEED;
 
 		rightJoint = (b2RevoluteJoint*) world.CreateJoint(&revDef1);
 		leftJoint = (b2RevoluteJoint*) world.CreateJoint(&revDef2);
@@ -103,7 +106,7 @@ public:
 	void jump() {
 		jumping = true;
 		float angle = _body->GetAngle();
-		float strength = 60;
+		float strength = JUMP_STRENGTH;
 		float unitX = strength * sin(angle);
 		float unitY = strength * -cos(angle);
 		_body->ApplyLinearImpulse( b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);

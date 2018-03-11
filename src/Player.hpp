@@ -9,9 +9,9 @@
 #include "Culbuto.hpp"
 
 #define TORQUE 100
-#define SPEED 500
 #define JUMP_STRENGTH 15
 #define DEGTORAD (M_PI / 180.)
+#define SPEED (360 * DEGTORAD)
 
 class Player : public Object {
 private:

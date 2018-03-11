@@ -11,13 +11,13 @@
 #define TORQUE 100
 #define JUMP_STRENGTH 15
 #define DEGTORAD (M_PI / 180.)
-#define SPEED (360 * DEGTORAD)
+#define SPEED (420 * DEGTORAD)
 
 class Player : public Object {
 private:
     float _width = 0.03 * PH_WIDTH;
     float _height = 0.12 * PH_HEIGHT;
-    float _legWidth = _width / 1.9;
+    float _legWidth = _width / 1.7;
     float _legHeight = 0.06 * PH_HEIGHT;
     sf::Color _color;
     std::string _name;

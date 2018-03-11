@@ -23,6 +23,7 @@ public:
         fixDef.density = 0.;
 		fixDef.filter.categoryBits = 0x0002;
 		fixDef.restitution = 0.1;
+		fixDef.friction = 0.8;
         fixDef.shape = &shape;
         _body->CreateFixture(&fixDef);
 		initSprite();

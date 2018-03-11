@@ -28,7 +28,8 @@ public:
 		_color(c),
 		_name(n),
 		_leftLeg(world, initX, 2*PH_HEIGHT/3, _legWidth, _legHeight, sf::Color::White),
-		_rightLeg(world, initX+_width, 2*PH_HEIGHT/3, _legWidth, _legHeight, sf::Color::Yellow) {
+		_rightLeg(world, initX+_width, 2*PH_HEIGHT/3, _legWidth, _legHeight, sf::Color::Yellow),
+		rightLooking(rightLooking) {
 
 		// Main body
         b2BodyDef bDef;
@@ -51,7 +52,7 @@ public:
 		revDef1.collideConnected = false;
 		revDef1.localAnchorB.Set(+_width/2, 0);
 		revDef1.localAnchorA.Set(_legWidth/2, -_legHeight);
-		revDef1.enableLimit = false;
+		revDef1.enableLimit = true;
 		revDef1.upperAngle = 0;
 		revDef1.lowerAngle = rightLooking ? (90 * DEGTORAD) : 0;
 		revDef1.enableMotor = rightLooking;

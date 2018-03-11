@@ -8,7 +8,7 @@
 #include "Text.hpp"
 #include "Culbuto.hpp"
 
-#define TORQUE 500
+#define TORQUE 100
 #define SPEED 500
 #define JUMP_STRENGTH 15
 #define DEGTORAD (M_PI / 180.)

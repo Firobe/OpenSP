@@ -49,7 +49,7 @@ public:
 		revDef1.bodyA = _body;
 		revDef1.bodyB = _rightLeg._body;
 		revDef1.collideConnected = false;
-		revDef1.localAnchorA.Set(+_width/2, _height/2.);
+		revDef1.localAnchorA.Set(+_width/2, 0);
 		revDef1.localAnchorB.Set(-_legWidth/2, -_legHeight);
 		revDef1.enableLimit = true;
 		revDef1.lowerAngle = 0;
@@ -63,7 +63,7 @@ public:
 		revDef2.bodyA = _body;
 		revDef2.bodyB = _leftLeg._body;
 		revDef2.collideConnected = false;
-		revDef2.localAnchorA.Set(-_width/2, _height/2.);
+		revDef2.localAnchorA.Set(-_width/2, 0);
 		revDef2.localAnchorB.Set(+_legWidth/2, -_legHeight);
 		revDef2.enableLimit = true;
 		revDef2.upperAngle = 0;

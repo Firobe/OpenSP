@@ -80,6 +80,14 @@ public:
 		float angle = (rand() % 21 - 10) / 30.;
 		_body->ApplyAngularImpulse(angle, true);
 		*/
+		initSprite();
+    }
+
+    void initSprite() {
+        sf::Vector2f size = sf::Vector2f(_width * RATIO, _height * RATIO);
+        _sprite = new sf::RectangleShape(size);
+        _sprite->setFillColor(_color);
+        _sprite->setOrigin({_width * RATIO / 2.f, _height * RATIO});
     }
 	void render(sf::RenderWindow& window) {
 		Object::render(window);

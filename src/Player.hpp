@@ -46,16 +46,16 @@ public:
 
 		//Attach right leg
 		b2RevoluteJointDef revDef1;
-		revDef1.bodyA = _body;
-		revDef1.bodyB = _rightLeg._body;
+		revDef1.bodyB = _body;
+		revDef1.bodyA = _rightLeg._body;
 		revDef1.collideConnected = false;
-		revDef1.localAnchorA.Set(+_width/2, 0);
-		revDef1.localAnchorB.Set(_legWidth/2, -_legHeight);
+		revDef1.localAnchorB.Set(+_width/2, 0);
+		revDef1.localAnchorA.Set(_legWidth/2, -_legHeight);
 		revDef1.enableLimit = false;
 		revDef1.upperAngle = 0;
-		revDef1.lowerAngle = rightLooking ? (-90 * DEGTORAD) : 0;
+		revDef1.lowerAngle = rightLooking ? (90 * DEGTORAD) : 0;
 		revDef1.enableMotor = rightLooking;
-		revDef1.maxMotorTorque = 30;
+		revDef1.maxMotorTorque = 0;
 		revDef1.motorSpeed = 3600;
 
 		//Attach left

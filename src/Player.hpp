@@ -108,7 +108,7 @@ public:
 		//_body->ApplyLinearImpulse(
 		//		b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
 		if(rightLooking)
-			rightJoint->SetMaxMotorTorque(rightJoint->GetMaxMotorTorque() - 0.5);
+			rightJoint->SetMaxMotorTorque(rightJoint->GetMaxMotorTorque() + 0.5);
 		else
 			leftJoint->SetMaxMotorTorque(leftJoint->GetMaxMotorTorque() + 0.5);	
 	}

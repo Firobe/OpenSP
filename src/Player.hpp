@@ -52,8 +52,8 @@ public:
 		revDef1.localAnchorA.Set(+_width/2, 0);
 		revDef1.localAnchorB.Set(_legWidth/2, -_legHeight);
 		revDef1.enableLimit = true;
-		revDef1.lowerAngle = 0;
-		revDef1.upperAngle = rightLooking ? (90 * DEGTORAD) : 0;
+		revDef1.upperAngle = 0;
+		revDef1.lowerAngle = rightLooking ? (-90 * DEGTORAD) : 0;
 		revDef1.enableMotor = rightLooking;
 		revDef1.maxMotorTorque = 0;
 		revDef1.motorSpeed = -3600;
@@ -104,8 +104,8 @@ public:
 		float strength = 20;
 		float unitX = strength * sin(angle);
 		float unitY = strength * -cos(angle);
-		_body->ApplyLinearImpulse(
-				b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
+		//_body->ApplyLinearImpulse(
+		//		b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
 		if(rightLooking)
 			rightJoint->SetMaxMotorTorque(rightJoint->GetMaxMotorTorque() + 0.5);	
 		else

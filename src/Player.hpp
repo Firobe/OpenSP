@@ -27,7 +27,7 @@ public:
 		Object(world),
 		_color(c),
 		_name(n),
-		_leftLeg(world, initX, 2*PH_HEIGHT/3, _legWidth, _legHeight, c),
+		_leftLeg(world, initX, 2*PH_HEIGHT/3, _legWidth, _legHeight, sf::Color::White),
 		_rightLeg(world, initX+_width, 2*PH_HEIGHT/3, _legWidth, _legHeight, sf::Color::Yellow) {
 
 		// Main body
@@ -49,7 +49,7 @@ public:
 		revDef1.bodyA = _body;
 		revDef1.bodyB = _rightLeg._body;
 		revDef1.collideConnected = false;
-		revDef1.localAnchorA.Set(+_width/2, -_height);
+		revDef1.localAnchorA.Set(+_width/2, _height/2.);
 		revDef1.localAnchorB.Set(-_legWidth/2, -_legHeight);
 		revDef1.enableLimit = true;
 		revDef1.lowerAngle = 0;
@@ -63,7 +63,7 @@ public:
 		revDef2.bodyA = _body;
 		revDef2.bodyB = _leftLeg._body;
 		revDef2.collideConnected = false;
-		revDef2.localAnchorA.Set(-_width/2, -_height);
+		revDef2.localAnchorA.Set(-_width/2, _height/2.);
 		revDef2.localAnchorB.Set(+_legWidth/2, -_legHeight);
 		revDef2.enableLimit = true;
 		revDef2.upperAngle = 0;

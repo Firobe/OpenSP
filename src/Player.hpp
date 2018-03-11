@@ -56,7 +56,7 @@ public:
 		revDef1.lowerAngle = rightLooking ? (-90 * DEGTORAD) : 0;
 		revDef1.enableMotor = rightLooking;
 		revDef1.maxMotorTorque = 0;
-		revDef1.motorSpeed = -3600;
+		revDef1.motorSpeed = 3600;
 
 		//Attach left
 		b2RevoluteJointDef revDef2;

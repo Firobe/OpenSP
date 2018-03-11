@@ -17,7 +17,7 @@ class Player : public Object {
 private:
     float _width = 0.03 * PH_WIDTH;
     float _height = 0.12 * PH_HEIGHT;
-    float _legWidth = _width / 1.7;
+    float _legWidth = _width / 2.2;
     float _legHeight = 0.06 * PH_HEIGHT;
     sf::Color _color;
     std::string _name;

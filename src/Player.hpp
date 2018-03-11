@@ -10,7 +10,7 @@
 
 #define TORQUE 500
 #define SPEED 500
-#define JUMP_STRENGTH 50
+#define JUMP_STRENGTH 15
 #define DEGTORAD (M_PI / 180.)
 
 class Player : public Object {

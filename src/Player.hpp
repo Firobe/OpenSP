@@ -117,6 +117,8 @@ public:
                 leftJoint->SetMotorSpeed(
                     SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
         }
+		_leftLeg.update();
+		_rightLeg.update();
     }
     void jump() {
         jumping = true;

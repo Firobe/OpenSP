@@ -97,7 +97,7 @@ public:
     }
 	void update() {
 		if(colliding()) {
-			std::cout << "TOCC" << std::endl;
+			std::cout << "TOCC " << colNb << std::endl;
 		} else {
 			std::cout << "LEMME SMASH" << std::endl;
 		}

@@ -11,7 +11,7 @@ private:
 	sf::Color _color;
 	float _width;
 	float _height;
-	float _ballRadius = 2 * _width;
+	float _ballRadius = 1 * _width;
 	float _lestDensity = 50.;
 public:
     Culbuto(b2World& world, float x, float y, float w, float h, sf::Color c ) : Object(world), _color(c), _width(w), _height(h) {

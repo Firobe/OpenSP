@@ -9,7 +9,7 @@
 #include "Culbuto.hpp"
 
 #define TORQUE 100
-#define JUMP_STRENGTH 15
+#define JUMP_STRENGTH 25
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (420 * DEGTORAD)
 

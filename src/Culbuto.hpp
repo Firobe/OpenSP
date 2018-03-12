@@ -12,7 +12,7 @@ private:
 	float _width;
 	float _height;
 	float _ballRadius = 1 * _width;
-	float _lestDensity = 50.;
+	float _lestDensity = 250.;
 public:
     Culbuto(b2World& world, float x, float y, float w, float h, sf::Color c ) : Object(world), _color(c), _width(w), _height(h) {
 		// Body definition

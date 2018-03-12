@@ -117,7 +117,7 @@ public:
                 leftJoint->SetMotorSpeed(
                     SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
         }
-		_body->ApplyForce(b2Vec2(0, 9.81), b2Vec2(0, _height), true);
+		_body->ApplyForce(b2Vec2(0, 0.81), _body->GetWorldCenter() + b2Vec2(0, _height), true);
     }
     void jump() {
         jumping = true;

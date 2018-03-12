@@ -31,6 +31,7 @@ public:
         fixDef.shape = &shape;
         _body->CreateFixture(&fixDef);
 
+		/*
 		// Ball under body
         b2CircleShape ball;
         ball.m_p.Set(0, 0);
@@ -53,6 +54,7 @@ public:
 		fixDef3.friction = 1.;
         fixDef3.shape = &lest;
         _body->CreateFixture(&fixDef3);
+		*/
 
 		initSprite();
     }

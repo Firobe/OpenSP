@@ -9,7 +9,7 @@
 #include "Culbuto.hpp"
 
 #define TORQUE 100
-#define JUMP_STRENGTH 25
+#define JUMP_STRENGTH 2
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (420 * DEGTORAD)
 
@@ -117,6 +117,7 @@ public:
                 leftJoint->SetMotorSpeed(
                     SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
         }
+		_body->ApplyForce(b2Vec2(0, 9.81), b2Vec2(0, _height), true);
     }
     void jump() {
         jumping = true;

@@ -31,7 +31,6 @@ public:
         fixDef.shape = &shape;
         _body->CreateFixture(&fixDef);
 
-		/*
 		// Ball under body
         b2CircleShape ball;
         ball.m_p.Set(0, 0);
@@ -54,7 +53,6 @@ public:
 		fixDef3.friction = 1.;
         fixDef3.shape = &lest;
         _body->CreateFixture(&fixDef3);
-		*/
 
 		initSprite();
     }
@@ -62,7 +60,7 @@ public:
         sf::Vector2f size = sf::Vector2f(_width * RATIO, (_height + _ballRadius) * RATIO);
         _sprite = new sf::RectangleShape(size);
         _sprite->setFillColor(_color);
-        _sprite->setOrigin({_width * RATIO / 2.f, _height * RATIO});
+        _sprite->setOrigin({_width * RATIO / 2.f, (_height +_ballRadius) * RATIO});
     }
 };
 

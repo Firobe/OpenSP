@@ -26,7 +26,7 @@ private:
 	float _width;
 	float _height;
 	float _ballRadius = 1 * _width;
-	float _lestDensity = 250.;
+	float _lestDensity = 2;//250.;
 	b2Fixture* bitonio = nullptr;
 public:
 	int colNb = 0;

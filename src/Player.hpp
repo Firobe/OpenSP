@@ -9,7 +9,7 @@
 #include "Culbuto.hpp"
 
 #define TORQUE 100
-#define JUMP_STRENGTH 25
+#define JUMP_STRENGTH 2
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (420 * DEGTORAD)
 
@@ -122,12 +122,17 @@ public:
                 leftJoint->SetMotorSpeed(
                     SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
         }
+		if(canJump())
+			_body->ApplyForce(b2Vec2(0, 3.), _body->GetWorldCenter() + b2Vec2(0, -_height/2), true);
 		_leftLeg.update(step);
 		_rightLeg.update(step);
     }
+	bool canJump() const {
+		return _leftLeg.colliding() or _rightLeg.colliding();
+	}
     void jump() {
 		jumping = true;
-		if(_leftLeg.colliding() or _rightLeg.colliding()) {
+		if(canJump()) {
 			float angle = _body->GetAngle();
 			float strength = JUMP_STRENGTH;
 			float unitX = strength * sin(angle);

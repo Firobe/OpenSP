@@ -176,7 +176,7 @@ int main(int argc, char** argv) {
 				}
 			}
 
-			if(not isServer or clients.size() > 0) {
+			if(not isServer or clients.size() >= 0) {
 				mtx.lock();
 				if (roundActive)
 					world.Step(elapsed, 8 * 10, 3 * 10);

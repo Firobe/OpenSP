@@ -58,17 +58,6 @@ public:
         fixDef2.shape = &ball;
         _body->CreateFixture(&fixDef2);
 
-		// Weight under ball
-        b2CircleShape lest;
-        lest.m_p.Set(0, 0.75 * _ballRadius);
-		lest.m_radius = 0.25 * _ballRadius;
-        b2FixtureDef fixDef3;
-		fixDef3.restitution = 0.1;
-		fixDef3.density = _lestDensity;
-		fixDef3.friction = 1.;
-        fixDef3.shape = &lest;
-        _body->CreateFixture(&fixDef3);
-
 		// Bitonio
 		b2PolygonShape bitoshape;
 		b2FixtureDef bitofix;
@@ -78,6 +67,18 @@ public:
 		bitofix.isSensor = true;
 		bitonio = _body->CreateFixture(&bitofix);
 		bitonio->SetUserData((void*) this);
+
+
+		// Weight under ball (must stay at the end)
+        b2CircleShape lest;
+        lest.m_p.Set(0, 0.75 * _ballRadius);
+		lest.m_radius = 0.25 * _ballRadius;
+        b2FixtureDef fixDef3;
+		fixDef3.restitution = 0.1;
+		fixDef3.density = _lestDensity;
+		fixDef3.friction = 1.;
+        fixDef3.shape = &lest;
+        _body->CreateFixture(&fixDef3);
 
 		initSprite();
     }
@@ -89,7 +90,7 @@ public:
     }
 	void update() {
 		float newDens = colliding() ? _lestDensity : 1.;
-		//_body->GetFixtureList()[2].SetDensity(newDens);
+		_body->GetFixtureList()->SetDensity(newDens);
 	}
 	bool colliding() const {
 		return colNb > 0;

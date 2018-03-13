@@ -12,7 +12,7 @@
 #define JUMP_STRENGTH 5.
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (600 * DEGTORAD)
-#define CONTINUOUS 14.
+#define CONTINUOUS 16.
 
 class Player : public Object {
 private:
@@ -44,7 +44,7 @@ public:
         shape.SetAsBox(_width / 2, _height / 2, b2Vec2(0, -_height / 2.), 0.);
         b2FixtureDef fixDef;
         fixDef.restitution = 0.1;
-        fixDef.density = 1.;
+        fixDef.density = 2.;
         fixDef.friction = 1.;
         fixDef.shape = &shape;
         _body->CreateFixture(&fixDef);
@@ -126,8 +126,8 @@ public:
 		if(canJump() and not jumping){
 			_body->ApplyForce(b2Vec2(0, -CONTINUOUS), _body->GetWorldCenter() + b2Vec2(0, -_height/2), true);
 		
-			_leftLeg._body->ApplyForce(b2Vec2(0, CONTINUOUS), _leftLeg._body->GetWorldCenter() + b2Vec2(0, _legHeight/2), true);
-			_rightLeg._body->ApplyForce(b2Vec2(0, CONTINUOUS), _rightLeg._body->GetWorldCenter() + b2Vec2(0, _legHeight/2), true);
+			_leftLeg._body->ApplyForce(b2Vec2(0, CONTINUOUS/2), _leftLeg._body->GetWorldCenter() + b2Vec2(0, _legHeight/2), true);
+			_rightLeg._body->ApplyForce(b2Vec2(0, CONTINUOUS/2), _rightLeg._body->GetWorldCenter() + b2Vec2(0, _legHeight/2), true);
 		}
 		_leftLeg.update(step);
 		_rightLeg.update(step);

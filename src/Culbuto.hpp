@@ -5,27 +5,18 @@
 #include <Box2D/Box2D.h>
 #include "Object.hpp"
 #include "Text.hpp"
+#include <iostream>
 
 #define EPSILON (0.1)
 
 class BitoMonitor : public b2ContactListener {
 public:
-	int& nb;
-	BitoMonitor(int& nb) : nb(nb) {}
+	BitoMonitor() = default;
 private:
-	void BeginContact(b2Contact* contact) {
-		if((long)(contact->GetFixtureA()->GetUserData()) == 0xB170F10 ||
-			(long)(contact->GetFixtureB()->GetUserData()) == 0xB170F10) {
-			++nb;
-		}
-	}
-	void EndContact(b2Contact* contact) {
-		if((long)(contact->GetFixtureA()->GetUserData()) == 0xB170F10 ||
-			(long)(contact->GetFixtureB()->GetUserData()) == 0xB170F10) {
-			--nb;
-		}
-	}
+	void BeginContact(b2Contact* contact);
+	void EndContact(b2Contact* contact);
 };
+
 
 class Culbuto : public Object {
 private:
@@ -35,10 +26,10 @@ private:
 	float _ballRadius = 1 * _width;
 	float _lestDensity = 250.;
 	b2Fixture* bitonio = nullptr;
-	int colNb = 0;
 	BitoMonitor bebouzi;
 public:
-    Culbuto(b2World& world, float x, float y, float w, float h, sf::Color c ) : Object(world), _color(c), _width(w), _height(h), bebouzi(colNb) {
+	int colNb = 0;
+    Culbuto(b2World& world, float x, float y, float w, float h, sf::Color c ) : Object(world), _color(c), _width(w), _height(h), bebouzi() {
 		world.SetContactListener(&bebouzi);
 
 		// Body definition
@@ -85,7 +76,7 @@ public:
 		fixDef.shape = &shape;
 		fixDef.isSensor = true;
 		bitonio = _body->CreateFixture(&fixDef);
-		bitonio->SetUserData( (void*) 0xB170F10);
+		bitonio->SetUserData((void*) this);
 
 		initSprite();
     }

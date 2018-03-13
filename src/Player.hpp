@@ -12,7 +12,7 @@
 #define JUMP_STRENGTH 15
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (500 * DEGTORAD)
-#define CONTINUOUS 10.
+#define CONTINUOUS 9.
 
 class Player : public Object {
 private:
@@ -44,7 +44,7 @@ public:
         shape.SetAsBox(_width / 2, _height / 2, b2Vec2(0, -_height / 2.), 0.);
         b2FixtureDef fixDef;
         fixDef.restitution = 0.1;
-        fixDef.density = 2.;
+        fixDef.density = 1.5;
         fixDef.friction = 1.;
         fixDef.shape = &shape;
         _body->CreateFixture(&fixDef);

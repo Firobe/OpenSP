@@ -10,11 +10,12 @@ OBJECTS = $(SOURCES:.cpp=.o)
 .PHONY : clean
 .PHONY : run
 
-up:
-	git commit -am "Autocommit" && git push
 
 all: $(OBJECTS)
 	$(COMPILER) -o $(EXEC_NAME) $(OBJECTS) $(LINKS)
+
+up:
+	git commit -am "Autocommit" && git push
 
 %.o : %.cpp %.h
 	$(COMPILER) -c $(CXXFLAGS) $< -o $@

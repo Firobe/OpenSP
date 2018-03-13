@@ -89,6 +89,7 @@ public:
         _sprite->setFillColor(_color);
         _sprite->setOrigin({_width* RATIO / 2.f, _height * RATIO});
     }
+
     void render(sf::RenderWindow& window) {
         Object::render(window);
         _leftLeg.render(window);
@@ -99,9 +100,9 @@ public:
                        std::min(100., pow(abs(_body->GetLinearVelocity().y) +
                                           abs(_body->GetLinearVelocity().x), 2)));
 										  */
-        Text::drawText(window, std::to_string(_rightLeg.colliding()) + " / " +
-				std::to_string(_leftLeg.colliding()),
-                       sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO), 200);
+        Text::drawText(window, std::to_string(_leftLeg.colliding()) + " / " +
+				std::to_string(_rightLeg.colliding()),
+                       sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO), 100);
     }
 
     void update() {

@@ -70,10 +70,13 @@ public:
         _body->CreateFixture(&fixDef3);
 
 		// Bitonio
-		shape.SetAsBox(_width * (0.8 + EPSILON), EPSILON * _width, b2Vec2(0, -_ballRadius), 0.);
-		fixDef.shape = &shape;
-		fixDef.isSensor = true;
-		bitonio = _body->CreateFixture(&fixDef);
+		b2PolygonShape bitoshape;
+		b2FixtureDef bitofix;
+		bitoshape.SetAsBox(
+				_width * (0.8 + EPSILON), EPSILON * _width, b2Vec2(0, _ballRadius), 0.);
+		bitofix.shape = &bitoshape;
+		bitofix.isSensor = true;
+		bitonio = _body->CreateFixture(&bitofix);
 		bitonio->SetUserData((void*) this);
 
 		initSprite();

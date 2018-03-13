@@ -89,7 +89,7 @@ public:
     }
 	void update() {
 		float newDens = colliding() ? _lestDensity : 1.;
-		_body->GetFixtureList()[2].SetDensity(newDens);
+		//_body->GetFixtureList()[2].SetDensity(newDens);
 	}
 	bool colliding() const {
 		return colNb > 0;

@@ -16,8 +16,10 @@ bool isServer = false;
 
 int main(int argc, char** argv) {
 	if(argc < 2) return EXIT_FAILURE;
+	unsigned port = 2713;
 	if(argv[1] == string("server"))
 		isServer = true;
+	if(argc > 2) port = stoi(argv[2]);
     srand(time(0));
 	sf::RenderWindow* window;
 	if(not isServer) {
@@ -30,7 +32,6 @@ int main(int argc, char** argv) {
 	sf::Clock clock;
 
 	sf::TcpSocket socket;
-	unsigned port = 2713;
 	sf::IpAddress serverAdress = argv[1];
 	if(not isServer)
 		if(socket.connect(serverAdress, port) != sf::Socket::Done)

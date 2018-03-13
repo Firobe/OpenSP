@@ -77,7 +77,7 @@ public:
 		lest.m_radius = 0.25 * _ballRadius;
         b2FixtureDef fixDef3;
 		fixDef3.restitution = 0.1;
-		fixDef3.density = 1.;
+		fixDef3.density = _lestDensity;
 		fixDef3.friction = 1.;
         fixDef3.shape = &lest;
         _body->CreateFixture(&fixDef3);
@@ -91,11 +91,13 @@ public:
         _sprite->setOrigin({_width * RATIO / 2.f, _height * RATIO});
     }
 	void update(float elapsed) {
+		/*
 		float newDens = colliding() ? _lestDensity : 1.;
 		float oldDens = _body->GetFixtureList()->GetDensity();
 		_body->GetFixtureList()->SetDensity(oldDens + (newDens - oldDens) * 5 * elapsed);
 		 oldDens = _body->GetFixtureList()->GetDensity();
 		 std::cout << oldDens << std::endl;
+		 */
 	}
 	bool colliding() const {
 		return colNb > 0;

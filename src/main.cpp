@@ -186,7 +186,7 @@ int main(int argc, char** argv) {
 				if(not isServer) window->clear();
 
 				for (auto && ob : objects) {
-					ob->update();
+					ob->update(elapsed);
 					if(not isServer) ob->render(*window);
 				}
 				mtx.unlock();

@@ -105,7 +105,7 @@ public:
                        sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO), 100);
     }
 
-    void update() {
+    void update(float step) {
         if (jumping) {
             if (rightLooking)
 				rightJoint->SetMotorSpeed(
@@ -122,16 +122,18 @@ public:
                 leftJoint->SetMotorSpeed(
                     SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
         }
-		_leftLeg.update();
-		_rightLeg.update();
+		_leftLeg.update(step);
+		_rightLeg.update(step);
     }
     void jump() {
-        jumping = true;
-        float angle = _body->GetAngle();
-        float strength = JUMP_STRENGTH;
-        float unitX = strength * sin(angle);
-        float unitY = strength * -cos(angle);
-        _body->ApplyLinearImpulse(b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
+		jumping = true;
+		if(_leftLeg.colliding() or _rightLeg.colliding()) {
+			float angle = _body->GetAngle();
+			float strength = JUMP_STRENGTH;
+			float unitX = strength * sin(angle);
+			float unitY = strength * -cos(angle);
+			_body->ApplyLinearImpulse(b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
+		}
     }
     void unjump() {
         jumping = false;

@@ -22,7 +22,7 @@ protected:
 	virtual void initSprite() {}
 public:
 	b2Body* _body = nullptr;
-	virtual void update() {}
+	virtual void update(float) {}
 	virtual void render(sf::RenderWindow& window) {
 		_sprite->setPosition(
 			_body->GetPosition().x * RATIO,

@@ -12,14 +12,14 @@
 #define JUMP_STRENGTH 8
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (600 * DEGTORAD)
-#define CONTINUOUS 7.5
+#define CONTINUOUS 6.75
 
 class Player : public Object {
 private:
     float _width = 0.03 * PH_WIDTH;
     float _height = 0.10* PH_HEIGHT;
     float _legWidth = _width / 2.2;
-    float _legHeight = 0.09 * PH_HEIGHT;
+    float _legHeight = 0.075 * PH_HEIGHT;
     sf::Color _color;
     std::string _name;
     Culbuto _leftLeg, _rightLeg;

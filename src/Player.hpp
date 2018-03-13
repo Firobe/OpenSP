@@ -12,7 +12,7 @@
 #define JUMP_STRENGTH 8
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (600 * DEGTORAD)
-#define CONTINUOUS 6.75
+#define CONTINUOUS 11.
 
 class Player : public Object {
 private:
@@ -123,8 +123,11 @@ public:
                 leftJoint->SetMotorSpeed(
                     SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
         }
-		if(canJump() and not jumping)
+		if(canJump() and not jumping){
 			_body->ApplyForce(b2Vec2(0, -CONTINUOUS), _body->GetWorldCenter() + b2Vec2(0, -_height/2), true);
+		
+			_body->ApplyForce(b2Vec2(0, CONTINUOUS), _body->GetWorldCenter() + b2Vec2(0, _height/2), true);
+		}
 		_leftLeg.update(step);
 		_rightLeg.update(step);
     }

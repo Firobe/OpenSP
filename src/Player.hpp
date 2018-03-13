@@ -12,7 +12,7 @@
 #define JUMP_STRENGTH 8
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (600 * DEGTORAD)
-#define CONTINUOUS 110.
+#define CONTINUOUS 17.
 
 class Player : public Object {
 private:

@@ -73,7 +73,7 @@ public:
 		b2PolygonShape bitoshape;
 		b2FixtureDef bitofix;
 		bitoshape.SetAsBox(
-				_width * (0.8 + EPSILON), EPSILON * _width, b2Vec2(0, _ballRadius), 0.);
+				(_width / 2.) * (0.8 + EPSILON), EPSILON * _width, b2Vec2(0, _ballRadius), 0.);
 		bitofix.shape = &bitoshape;
 		bitofix.isSensor = true;
 		bitonio = _body->CreateFixture(&bitofix);
@@ -88,9 +88,11 @@ public:
         _sprite->setOrigin({_width * RATIO / 2.f, _height * RATIO});
     }
 	void update() {
+		float newDens = colliding() ? _lestDensity : 1.;
+		_body->GetFixtureList()[2].SetDensity(newDens);
 	}
-	int colliding() const {
-		return colNb;
+	bool colliding() const {
+		return colNb > 0;
 	}
 };
 

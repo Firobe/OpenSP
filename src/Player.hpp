@@ -8,17 +8,18 @@
 #include "Text.hpp"
 #include "Culbuto.hpp"
 
-#define TORQUE 100
-#define JUMP_STRENGTH 20
+#define TORQUE 130
+#define JUMP_STRENGTH 15
 #define DEGTORAD (M_PI / 180.)
-#define SPEED (420 * DEGTORAD)
+#define SPEED (500 * DEGTORAD)
+#define CONTINUOUS 8.
 
 class Player : public Object {
 private:
     float _width = 0.03 * PH_WIDTH;
-    float _height = 0.12 * PH_HEIGHT;
+    float _height = 0.105* PH_HEIGHT;
     float _legWidth = _width / 2.2;
-    float _legHeight = 0.06 * PH_HEIGHT;
+    float _legHeight = 0.075 * PH_HEIGHT;
     sf::Color _color;
     std::string _name;
     Culbuto _leftLeg, _rightLeg;
@@ -123,7 +124,7 @@ public:
                     SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
         }
 		if(canJump() and not jumping)
-			_body->ApplyForce(b2Vec2(0, -5.), _body->GetWorldCenter() + b2Vec2(0, -_height/2), true);
+			_body->ApplyForce(b2Vec2(0, -CONTINUOUS), _body->GetWorldCenter() + b2Vec2(0, -_height/2), true);
 		_leftLeg.update(step);
 		_rightLeg.update(step);
     }

@@ -126,7 +126,8 @@ public:
 		if(canJump() and not jumping){
 			_body->ApplyForce(b2Vec2(0, -CONTINUOUS), _body->GetWorldCenter() + b2Vec2(0, -_height/2), true);
 		
-			_body->ApplyForce(b2Vec2(0, CONTINUOUS), _body->GetWorldCenter() + b2Vec2(0, _height/2+_legHeight), true);
+			_leftLeg._body->ApplyForce(b2Vec2(0, CONTINUOUS), _body->GetWorldCenter() + b2Vec2(0, _legHeight/2), true);
+			_rightLeg._body->ApplyForce(b2Vec2(0, CONTINUOUS), _body->GetWorldCenter() + b2Vec2(0, _legHeight/2), true);
 		}
 		_leftLeg.update(step);
 		_rightLeg.update(step);

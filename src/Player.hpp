@@ -9,7 +9,7 @@
 #include "Culbuto.hpp"
 
 #define TORQUE 100
-#define JUMP_STRENGTH 2
+#define JUMP_STRENGTH 4
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (420 * DEGTORAD)
 
@@ -123,7 +123,7 @@ public:
                     SPEED * (leftJoint->GetLowerLimit() - leftJoint->GetJointAngle()));
         }
 		if(canJump() and not jumping)
-			_body->ApplyForce(b2Vec2(0, -9.), _body->GetWorldCenter() + b2Vec2(0, -_height/2), true);
+			_body->ApplyForce(b2Vec2(0, -5.), _body->GetWorldCenter() + b2Vec2(0, -_height/2), true);
 		_leftLeg.update(step);
 		_rightLeg.update(step);
     }

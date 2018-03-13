@@ -26,11 +26,9 @@ private:
 	float _ballRadius = 1 * _width;
 	float _lestDensity = 250.;
 	b2Fixture* bitonio = nullptr;
-	BitoMonitor bebouzi;
 public:
 	int colNb = 0;
-    Culbuto(b2World& world, float x, float y, float w, float h, sf::Color c ) : Object(world), _color(c), _width(w), _height(h), bebouzi() {
-		world.SetContactListener(&bebouzi);
+    Culbuto(b2World& world, float x, float y, float w, float h, sf::Color c ) : Object(world), _color(c), _width(w), _height(h) {
 
 		// Body definition
         b2BodyDef bDef;
@@ -87,14 +85,9 @@ public:
         _sprite->setOrigin({_width * RATIO / 2.f, _height * RATIO});
     }
 	void update() {
-		if(colliding()) {
-			std::cout << "TOCC " << colNb << std::endl;
-		} else {
-			std::cout << "LEMME SMASH" << std::endl;
-		}
 	}
-	bool colliding() const {
-		return colNb > 0;
+	int colliding() const {
+		return colNb;
 	}
 };
 

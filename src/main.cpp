@@ -52,6 +52,8 @@ int main(int argc, char** argv) {
     while (score1 < 5 and score2 < 5) {
         b2Vec2 gravity(0., 9.81);
         b2World world(gravity);
+		BitoMonitor bebouzi;
+		world.SetContactListener(&bebouzi);
         Ground ground(world);
         Goal go1(world, 0.01 * PH_WIDTH, true);
         Goal go2(world, 0.98 * PH_WIDTH, false);

@@ -94,10 +94,14 @@ public:
         _leftLeg.render(window);
         _rightLeg.render(window);
         auto pos = _body->GetPosition();
-        Text::drawText(window, _name,
+        /*Text::drawText(window, _name,
                        sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO),
                        std::min(100., pow(abs(_body->GetLinearVelocity().y) +
                                           abs(_body->GetLinearVelocity().x), 2)));
+										  */
+        Text::drawText(window, std::to_string(_rightLeg.colliding()) + " / " +
+				std::to_string(_leftLeg.colliding()),
+                       sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO), 200);
     }
 
     void update() {

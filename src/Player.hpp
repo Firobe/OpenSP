@@ -150,11 +150,13 @@ public:
         jumping = false;
     }
     sf::Packet& output(sf::Packet& p) const override {
+		p << _name;
         Object::output(p);
         _leftLeg.output(p);
         return _rightLeg.output(p);
     }
     sf::Packet& input(sf::Packet& p) override {
+		p >> _name;
         Object::input(p);
         _leftLeg.input(p);
         return _rightLeg.input(p);

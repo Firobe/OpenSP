@@ -45,7 +45,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
                 std::vector<sf::TcpSocket*>& clients,
                 Player** p1A, Player** p1B, Player** p2A, Player** p2B, bool& canStart) {
 	sf::TcpSocket* owners[] = {nullptr, nullptr, nullptr, nullptr};//P1A,P1B,P2A,P2B
-	Player* players[] = {*p1A, *p1B, *p2A, *p2B};
+	Player** players[] = {p1A, p1B, p2A, p2B};
     sf::TcpListener listener;
 
     if (listener.listen(expectedPort) != sf::Socket::Done) exit(1);
@@ -81,14 +81,14 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 
 								if(in < 8 and owners[in % 4] == nullptr) {
 									owners[in % 4] = c;
-									players[in % 4]->setName(c->getRemoteAddress().toString());
+									(*players[in % 4])->setName(c->getRemoteAddress().toString());
 									if(std::all_of(owners, owners + 4,
 												[](sf::TcpSocket* p){return p != nullptr;}))
 										canStart = true;
 								}
 								if(in < 8 and owners[in % 4] == c) {
-									if(in < 4) players[in]->jump();
-									else players[in % 4]->unjump();
+									if(in < 4) (*players[in])->jump();
+									else (*players[in % 4])->unjump();
 								}
                             }
                         }

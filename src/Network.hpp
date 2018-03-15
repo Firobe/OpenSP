@@ -16,14 +16,22 @@
 #define P4_RELEASED 7
 //You can change now
 #define CONNECT 8
+#define CHANGE_NAME 9
 
 struct Event {
+	Event() = default;
     Event(sf::Uint8 i) : in(i) {}
     sf::Uint8 in;
+	std::string data;
 };
 
 sf::Packet& operator << (sf::Packet& packet, const Event& e) {
-    packet << e.in;
+    packet << e.in << e.data;
+    return packet;
+}
+
+sf::Packet& operator >> (sf::Packet& packet, Event& e) {
+    packet >> e.in >> e.data;
     return packet;
 }
 
@@ -76,12 +84,12 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
                             //PROCESS DATA
 
                             if (p1A != nullptr) {
-                                sf::Uint8 in;
-                                p >> in;
+								Event e;
+								p >> e;
+                                sf::Uint8 in = e.in;
 
 								if(in < 8 and owners[in % 4] == nullptr) {
 									owners[in % 4] = c;
-									(*players[in % 4])->setName(c->getRemoteAddress().toString());
 									if(std::all_of(owners, owners + 4,
 												[](sf::TcpSocket* p){return p != nullptr;}))
 										canStart = true;
@@ -89,6 +97,14 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 								if(in < 8 and owners[in % 4] == c) {
 									if(in < 4) (*players[in])->jump();
 									else (*players[in % 4])->unjump();
+								}
+								if(in == CHANGE_NAME) {
+									unsigned count = 1;
+									for(unsigned i = 0 ; i < 4 ; ++i)
+										if(owners[i] == c)
+											(*players[i])->setName(
+													e.data + "-" + to_string(count++));
+
 								}
                             }
                         }

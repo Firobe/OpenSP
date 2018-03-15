@@ -152,10 +152,17 @@ int main(int argc, char** argv) {
 					sf::Packet p;
 					Event e(in);
 					p << e;
-					cout << e.in << endl;
 					socket.send(p);
 				}
             }
+			if(not isServer) {
+				Event e;
+				e.in = CHANGE_NAME;
+				e.data = "My name's Jeff";
+				sf::Packet p;
+				p << e;
+				socket.send(p);
+			}
 
 			float elapsed = clock.restart().asSeconds();
 

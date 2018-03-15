@@ -12,7 +12,10 @@
 #define JUMP_STRENGTH 8.
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (600 * DEGTORAD)
-#define CONTINUOUS 17.
+#define CONTINUOUS 14.
+
+#define MIN_NSIZE 40.
+#define MAX_NSIZE 110.
 
 class Player : public Object {
 private:
@@ -76,11 +79,11 @@ public:
         revDef2.motorSpeed = -SPEED;
         rightJoint = (b2RevoluteJoint*) world.CreateJoint(&revDef1);
         leftJoint = (b2RevoluteJoint*) world.CreateJoint(&revDef2);
+
         // Initial rotation
-        /*
         float angle = (rand() % 21 - 10) / 30.;
         _body->ApplyAngularImpulse(angle, true);
-        */
+        
         initSprite();
     }
 
@@ -96,10 +99,12 @@ public:
         _leftLeg.render(window);
         _rightLeg.render(window);
         auto pos = _body->GetPosition();
+
         Text::drawText(window, _name,
                        sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO),
-                       std::min(100., pow(abs(_body->GetLinearVelocity().y) +
-                                          abs(_body->GetLinearVelocity().x), 2)));
+					   std::max(MIN_NSIZE, 
+						   std::min(MAX_NSIZE, pow(abs(_body->GetLinearVelocity().y) +
+											  abs(_body->GetLinearVelocity().x), 2))));
     }
 
     void update(float step) {
@@ -155,6 +160,7 @@ public:
         return _rightLeg.input(p);
     }
 	void setName(std::string newp) {
+		std::cout << "Bonsoir " << _name << std::endl;
 		_name = newp;
 	}
 };

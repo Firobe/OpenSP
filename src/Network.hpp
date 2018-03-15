@@ -5,24 +5,25 @@
 #include <vector>
 #include <mutex>
 
-#define CONNECT 0
-#define P1_PRESSED 1
-#define P2_PRESSED 2
-#define P3_PRESSED 3
-#define P4_PRESSED 4
-#define P1_RELEASED 5
-#define P2_RELEASED 6
-#define P3_RELEASED 7
-#define P4_RELEASED 8
+//DO NOT CHANGE ORDER
+#define P1_PRESSED 0
+#define P2_PRESSED 1
+#define P3_PRESSED 2
+#define P4_PRESSED 3
+#define P1_RELEASED 4
+#define P2_RELEASED 5
+#define P3_RELEASED 6
+#define P4_RELEASED 7
+//You can change now
+#define CONNECT 8
 
 struct Event {
-    Event(sf::Uint8 i, sf::Uint8 id) : in(i), id(id) {}
+    Event(sf::Uint8 i) : in(i) {}
     sf::Uint8 in;
-    sf::Uint8 id;
 };
 
 sf::Packet& operator << (sf::Packet& packet, const Event& e) {
-    packet << e.id << e.in;
+    packet << e.in;
     return packet;
 }
 
@@ -34,7 +35,6 @@ void clientRecv(sf::TcpSocket* socket, std::vector<Object*>& objects, std::mutex
         if (socket->receive(p) != sf::Socket::Done)
             exit(1);
 
-        std::cout << "grumeau" << std::endl;
         mtx.lock();
         p >> objects;
         mtx.unlock();
@@ -43,7 +43,9 @@ void clientRecv(sf::TcpSocket* socket, std::vector<Object*>& objects, std::mutex
 
 void serverRecv(unsigned expectedPort, std::mutex& mtx,
                 std::vector<sf::TcpSocket*>& clients,
-                Player** p1A, Player** p1B, Player** p2A, Player** p2B) {
+                Player** p1A, Player** p1B, Player** p2A, Player** p2B, bool& canStart) {
+	sf::TcpSocket* owners[] = {nullptr, nullptr, nullptr, nullptr};//P1A,P1B,P2A,P2B
+	Player* players[] = {*p1A, *p1B, *p2A, *p2B};
     sf::TcpListener listener;
 
     if (listener.listen(expectedPort) != sf::Socket::Done) exit(1);
@@ -72,29 +74,22 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 
                         if (c->receive(p) == sf::Socket::Done) {
                             //PROCESS DATA
-                            std::cout << "Ouille" << std::endl;
 
                             if (p1A != nullptr) {
-                                sf::Uint8 id;
                                 sf::Uint8 in;
-                                p >> id >> in;
+                                p >> in;
 
-                                if (in == P1_PRESSED)
-                                    (*p1A)->jump();
-                                else if (in == P2_PRESSED)
-                                    (*p1B)->jump();
-                                else if (in == P3_PRESSED)
-                                    (*p2A)->jump();
-                                else if (in == P4_PRESSED)
-                                    (*p2B)->jump();
-								else if (in == P1_RELEASED)
-                                    (*p1A)->unjump();
-                                else if (in == P2_RELEASED)
-                                    (*p1B)->unjump();
-                                else if (in == P3_RELEASED)
-                                    (*p2A)->unjump();
-                                else if (in == P4_RELEASED)
-                                    (*p2B)->unjump();
+								if(in < 8 and owners[in % 4] == nullptr) {
+									owners[in % 4] = c;
+									players[in % 4]->setName(c->getRemoteAddress().toString());
+									if(std::all_of(owners, owners + 4,
+												[](sf::TcpSocket* p){return p != nullptr;}))
+										canStart = true;
+								}
+								if(in < 8 and owners[in % 4] == c) {
+									if(in < 4) players[in]->jump();
+									else players[in % 4]->unjump();
+								}
                             }
                         }
                     }

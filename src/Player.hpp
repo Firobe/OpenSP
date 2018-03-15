@@ -9,10 +9,10 @@
 #include "Culbuto.hpp"
 
 #define TORQUE 130
-#define JUMP_STRENGTH 10.
+#define JUMP_STRENGTH 8.
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (600 * DEGTORAD)
-#define CONTINUOUS 16.
+#define CONTINUOUS 17.
 
 class Player : public Object {
 private:
@@ -44,7 +44,7 @@ public:
         shape.SetAsBox(_width / 2, _height / 2, b2Vec2(0, -_height / 2.), 0.);
         b2FixtureDef fixDef;
         fixDef.restitution = 0.1;
-        fixDef.density = 2.;
+        fixDef.density = 1.;
         fixDef.friction = 1.;
         fixDef.shape = &shape;
         _body->CreateFixture(&fixDef);
@@ -96,14 +96,10 @@ public:
         _leftLeg.render(window);
         _rightLeg.render(window);
         auto pos = _body->GetPosition();
-        /*Text::drawText(window, _name,
+        Text::drawText(window, _name,
                        sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO),
                        std::min(100., pow(abs(_body->GetLinearVelocity().y) +
                                           abs(_body->GetLinearVelocity().x), 2)));
-										  */
-        Text::drawText(window, std::to_string(_leftLeg.colliding()) + " / " +
-				std::to_string(_rightLeg.colliding()),
-                       sf::Vector2f(pos.x * RATIO, (pos.y - _height) * RATIO), 100);
     }
 
     void update(float step) {
@@ -158,6 +154,9 @@ public:
         _leftLeg.input(p);
         return _rightLeg.input(p);
     }
+	void setName(std::string newp) {
+		_name = newp;
+	}
 };
 
 #endif

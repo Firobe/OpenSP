@@ -39,9 +39,11 @@ int main(int argc, char** argv) {
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
 	vector<sf::TcpSocket*> clients;
+	bool canStart = false;
 	mutex mtx;
 	if(isServer) {
-		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B);
+		thread t(serverRecv, port, std::ref(mtx), std::ref(clients), &pp1A, &pp1B, &pp2A, &pp2B,
+				std::ref(canStart));
 		t.detach();
 	} else {
 		thread t(clientRecv, &socket,
@@ -87,6 +89,7 @@ int main(int argc, char** argv) {
                     window->close();
 
 				sf::Uint8 in = CONNECT;
+
                 if (event.type == sf::Event::KeyPressed) {
                     if (event.key.code == sf::Keyboard::Q) {
 						mtx.lock();
@@ -147,7 +150,7 @@ int main(int argc, char** argv) {
                 }
 				if(in != CONNECT) {
 					sf::Packet p;
-					Event e(in, 42);
+					Event e(in);
 					p << e;
 					cout << e.in << endl;
 					socket.send(p);
@@ -176,8 +179,8 @@ int main(int argc, char** argv) {
 				}
 			}
 
-			if(not isServer or clients.size() >= 0) {
-				mtx.lock();
+			mtx.lock();
+			if(not isServer or canStart) {
 				if (roundActive)
 					world.Step(elapsed, 8 * 10, 3 * 10);
 				else
@@ -189,8 +192,8 @@ int main(int argc, char** argv) {
 					ob->update(elapsed);
 					if(not isServer) ob->render(*window);
 				}
-				mtx.unlock();
 			}
+			mtx.unlock();
 
             if (!roundActive) {
                 lastFrames--;

@@ -15,6 +15,7 @@ using namespace std;
 bool isServer = false;
 
 int main(int argc, char** argv) {
+	string name;
 	if(argc < 2) return EXIT_FAILURE;
 	unsigned port = 2713;
 	if(argv[1] == string("server"))
@@ -23,6 +24,8 @@ int main(int argc, char** argv) {
     srand(time(0));
 	sf::RenderWindow* window;
 	if(not isServer) {
+		cout << "pls gibe nam: ";
+		cin >> name;
 		window = new sf::RenderWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenSP");
 		window->setKeyRepeatEnabled(false);
 	}
@@ -51,6 +54,11 @@ int main(int argc, char** argv) {
 		t.detach();
 	}
 
+	Event e;
+	e.in = CHANGE_NAME;
+	e.data = name;
+	sf::Packet namep;
+	namep << e;
 
     while (score1 < 5 and score2 < 5) {
         b2Vec2 gravity(0., 9.81);
@@ -73,7 +81,9 @@ int main(int argc, char** argv) {
         int lastFrames = 100;
         string endMessage;
 		float accumulated = 0;
-		
+		bool nameSent = false;
+		bool firstInput = false;
+
         while ((isServer or window->isOpen()) and lastFrames > 0) {
             sf::Event event;
 
@@ -149,22 +159,18 @@ int main(int argc, char** argv) {
 					}
                 }
 				if(in != CONNECT) {
+					firstInput = true;
 					sf::Packet p;
 					Event e(in);
 					p << e;
 					socket.send(p);
 				}
             }
-			if(not isServer) {
-				Event e;
-				e.in = CHANGE_NAME;
-				e.data = "My name's Jeff";
-				sf::Packet p;
-				p << e;
-				socket.send(p);
-			}
-
 			float elapsed = clock.restart().asSeconds();
+			if(firstInput and not nameSent) {
+				socket.send(namep);
+				nameSent = true;
+			}
 
 			if(isServer) {
 				accumulated += elapsed;

@@ -162,9 +162,7 @@ public:
         return _rightLeg.input(p);
     }
 	void setName(std::string newp) {
-		std::cout << "Bonsoir " << newp << std::endl;
 		_name = newp;
-		std::cout << "Bnsoir " << _name << std::endl;
 	}
 };
 

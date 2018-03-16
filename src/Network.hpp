@@ -103,7 +103,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 									for(unsigned i = 0 ; i < 4 ; ++i)
 										if(owners[i] == c)
 											(*players[i])->setName(
-													e.data + "-" + to_string(count++));
+													e.data + " #" + to_string(count++));
 
 								}
                             }

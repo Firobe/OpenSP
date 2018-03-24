@@ -55,6 +55,7 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 	sf::TcpSocket* owners[] = {nullptr, nullptr, nullptr, nullptr};//P1A,P1B,P2A,P2B
 	Player** players[] = {p1A, p1B, p2A, p2B};
     sf::TcpListener listener;
+	std::map<sf::TcpSocket*, std::string> names;
 
     if (listener.listen(expectedPort) != sf::Socket::Done) exit(1);
 
@@ -99,16 +100,20 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 									else (*players[in % 4])->unjump();
 								}
 								if(in == CHANGE_NAME) {
-									unsigned count = 1;
-									for(unsigned i = 0 ; i < 4 ; ++i)
-										if(owners[i] == c)
-											(*players[i])->setName(
-													e.data + "-" + to_string(count++));
-
+									//Update local array
+									names[c] = e.data;
 								}
+
                             }
                         }
                     }
+
+				//Bonsoir les noms
+				unsigned count = 1;
+				for(unsigned i = 0 ; i < 4 ; ++i)
+					if(owners[i] == nullptr)
+						(*players[i])->setName(names[owners[i]]
+								+ "-" + to_string(count++));
             }
             mtx.unlock();
         }

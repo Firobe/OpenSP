@@ -44,7 +44,12 @@ void clientRecv(sf::TcpSocket* socket, std::vector<Object*>& objects, std::mutex
             exit(1);
 
         mtx.lock();
-        p >> objects >> *round >> *score1 >> *score2;
+		sf::Uint8 c;
+		sf::Int8 u, l;
+        p >> objects >> c >> u >> l;
+		*round = c;
+		*score1 = u;
+		*score2 = l;
         mtx.unlock();
     }
 }

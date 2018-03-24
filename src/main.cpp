@@ -179,8 +179,8 @@ int main(int argc, char** argv) {
 					sf::Packet p;
 					p << objects;
 					p << sf::Uint8(roundNb)
-					  << sf::Uint8(score1)
-					  << sf::Uint8(score2);
+					  << sf::Int8(score1)
+					  << sf::Int8(score2);
 					int toDelete = 0;
 					mtx.lock();
 					for(sf::TcpSocket* c : clients) {
@@ -194,6 +194,9 @@ int main(int argc, char** argv) {
 					mtx.unlock();
 					accumulated = 0;
 				}
+				mtx.lock();
+				++roundNb;
+				mtx.unlock();
 			}
 
 			mtx.lock();

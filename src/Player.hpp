@@ -11,9 +11,9 @@
 #define TORQUE 125
 #define JUMP_STRENGTH 8.
 #define DEGTORAD (M_PI / 180.)
-#define SPEED (650 * DEGTORAD)
+#define SPEED (600 * DEGTORAD)
 #define CONTINUOUS 13.
-#define JUMP_THRESHOLD 0.05
+#define JUMP_THRESHOLD 0.1
 
 #define MIN_NSIZE 40.
 #define MAX_NSIZE 110.

@@ -232,7 +232,9 @@ int main(int argc, char** argv) {
 			}
 
             if (roundActive) {
-                if (ball.outOfBounds()) {
+                if (ball.outOfBounds() ||
+						(p1A.outOfBounds() && p1B.outOfBounds() &&
+						 p2A.outOfBounds() && p2B.outOfBounds())) {
                     endMessage = "Out of bounds";
                     roundActive = false;
                 }

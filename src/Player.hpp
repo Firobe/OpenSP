@@ -174,6 +174,11 @@ public:
 	void setName(std::string newp) {
 		_name = newp;
 	}
+
+	bool outOfBounds() {
+		return _body->GetPosition().x < 0 or
+			_body->GetPosition().x > PH_WIDTH;
+	}
 };
 
 #endif

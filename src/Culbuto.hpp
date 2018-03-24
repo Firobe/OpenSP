@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#define EPSILON (0.001)
+#define EPSILON (0.005)
 
 class BitoMonitor : public b2ContactListener {
 public:

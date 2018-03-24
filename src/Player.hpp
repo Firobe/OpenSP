@@ -8,12 +8,12 @@
 #include "Text.hpp"
 #include "Culbuto.hpp"
 
-#define TORQUE 130
+#define TORQUE 100
 #define JUMP_STRENGTH 8.
 #define DEGTORAD (M_PI / 180.)
-#define SPEED (600 * DEGTORAD)
-#define CONTINUOUS 14.
-#define JUMP_THRESHOLD 0.5
+#define SPEED (700 * DEGTORAD)
+#define CONTINUOUS 13.
+#define JUMP_THRESHOLD 0.1
 
 #define MIN_NSIZE 40.
 #define MAX_NSIZE 110.
@@ -112,6 +112,8 @@ public:
     }
 
     void update(float step) {
+		if(shouldJump && (clock.getElapsedTime() - jumpStart).asSeconds() >= JUMP_THRESHOLD)
+			actualJump();
         if (jumping) {
             if (rightLooking)
 				rightJoint->SetMotorSpeed(
@@ -149,16 +151,20 @@ public:
     }
     void unjump() {
         jumping = false;
-		if(shouldJump) {
-			float angle = _body->GetAngle();
-			float strength = JUMP_STRENGTH * (clock.getElapsedTime().asSeconds() -
-					jumpStart.asSeconds())/JUMP_THRESHOLD;
-			float unitX = strength * sin(angle);
-			float unitY = strength * -cos(angle);
-			_body->ApplyLinearImpulse(b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
-			shouldJump = false;
-		}
+		if(shouldJump)
+			actualJump();
     }
+private:
+	void actualJump() {
+		float angle = _body->GetAngle();
+		float strength = JUMP_STRENGTH * (clock.getElapsedTime().asSeconds() -
+				jumpStart.asSeconds())/JUMP_THRESHOLD;
+		float unitX = strength * sin(angle);
+		float unitY = strength * -cos(angle);
+		_body->ApplyLinearImpulse(b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
+		shouldJump = false;
+	}
+public:
     sf::Packet& output(sf::Packet& p) const override {
 		p << _name;
         Object::output(p);

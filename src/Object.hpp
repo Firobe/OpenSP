@@ -38,6 +38,10 @@ public:
 	friend sf::Packet& operator << (sf::Packet& packet, const Object&);
 	friend sf::Packet& operator >> (sf::Packet& packet, Object&);
 	
+	bool outOfBounds() {
+		return _body->GetPosition().x < 0 or
+			_body->GetPosition().x > PH_WIDTH;
+	}
 };
 
 sf::Packet& operator << (sf::Packet& packet, const std::vector<Object*> v);

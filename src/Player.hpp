@@ -8,12 +8,12 @@
 #include "Text.hpp"
 #include "Culbuto.hpp"
 
-#define TORQUE 140
+#define TORQUE 125
 #define JUMP_STRENGTH 8.
 #define DEGTORAD (M_PI / 180.)
-#define SPEED (500 * DEGTORAD)
+#define SPEED (650 * DEGTORAD)
 #define CONTINUOUS 13.
-#define JUMP_THRESHOLD 0.01
+#define JUMP_THRESHOLD 0.05
 
 #define MIN_NSIZE 40.
 #define MAX_NSIZE 110.
@@ -157,8 +157,8 @@ public:
 private:
 	void actualJump() {
 		float angle = _body->GetAngle();
-		float strength = JUMP_STRENGTH * (clock.getElapsedTime().asSeconds() -
-				jumpStart.asSeconds())/JUMP_THRESHOLD;
+		float strength = max(JUMP_STRENGTH * (clock.getElapsedTime().asSeconds() -
+				jumpStart.asSeconds())/JUMP_THRESHOLD, JUMP_STRENGTH);
 		float unitX = strength * sin(angle);
 		float unitY = strength * -cos(angle);
 		_body->ApplyLinearImpulse(b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);

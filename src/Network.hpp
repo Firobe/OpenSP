@@ -36,7 +36,7 @@ sf::Packet& operator >> (sf::Packet& packet, Event& e) {
 }
 
 void clientRecv(sf::TcpSocket* socket, std::vector<Object*>& objects, std::mutex& mtx,
-                sf::IpAddress serverAdress) {
+                sf::IpAddress serverAdress, unsigned* round, int* score1, int* score2) {
     while (true) {
         sf::Packet p;
 
@@ -44,7 +44,7 @@ void clientRecv(sf::TcpSocket* socket, std::vector<Object*>& objects, std::mutex
             exit(1);
 
         mtx.lock();
-        p >> objects;
+        p >> objects >> *round >> *score1 >> *score2;
         mtx.unlock();
     }
 }

@@ -50,7 +50,8 @@ int main(int argc, char** argv) {
 		t.detach();
 	} else {
 		thread t(clientRecv, &socket,
-				std::ref(objects), std::ref(mtx), serverAdress);
+				std::ref(objects), std::ref(mtx), serverAdress, &roundNb,
+				&score1, &score2);
 		t.detach();
 	}
 
@@ -177,6 +178,9 @@ int main(int argc, char** argv) {
 				if (accumulated >= 1./128.) {
 					sf::Packet p;
 					p << objects;
+					p << sf::Uint8(roundNb)
+					  << sf::Uint8(score1)
+					  << sf::Uint8(score2);
 					int toDelete = 0;
 					mtx.lock();
 					for(sf::TcpSocket* c : clients) {
@@ -206,7 +210,6 @@ int main(int argc, char** argv) {
 					if(not isServer) ob->render(*window);
 				}
 			}
-			mtx.unlock();
 
             if (!roundActive) {
                 lastFrames--;
@@ -242,9 +245,12 @@ int main(int argc, char** argv) {
                     roundActive = false;
                 }
             }
+			mtx.unlock();
         }
 
+		mtx.lock();
         ++roundNb;
+		mtx.unlock();
     }
 
     return 0;

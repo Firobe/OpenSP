@@ -8,12 +8,11 @@
 #include "Text.hpp"
 #include "Culbuto.hpp"
 
-#define TORQUE 125
+#define TORQUE 130
 #define JUMP_STRENGTH 8.
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (600 * DEGTORAD)
-#define CONTINUOUS 13.
-#define JUMP_THRESHOLD 0.1
+#define CONTINUOUS 14.
 
 #define MIN_NSIZE 40.
 #define MAX_NSIZE 110.
@@ -30,9 +29,6 @@ private:
     b2RevoluteJoint* rightJoint;
     b2RevoluteJoint* leftJoint;
     bool rightLooking, jumping;
-	sf::Clock clock;
-	bool shouldJump = false;
-	sf::Time jumpStart;
 public:
     Player(b2World& world, float initX, sf::Color c, std::string n, bool rightLooking) :
         Object(world),
@@ -112,8 +108,6 @@ public:
     }
 
     void update(float step) {
-		if(shouldJump && (clock.getElapsedTime() - jumpStart).asSeconds() >= JUMP_THRESHOLD)
-			actualJump();
         if (jumping) {
             if (rightLooking)
 				rightJoint->SetMotorSpeed(
@@ -145,26 +139,16 @@ public:
     void jump() {
 		jumping = true;
 		if(canJump()) {
-			jumpStart = clock.getElapsedTime();
-			shouldJump = true;
+			float angle = _body->GetAngle();
+			float strength = JUMP_STRENGTH;
+			float unitX = strength * sin(angle);
+			float unitY = strength * -cos(angle);
+			_body->ApplyLinearImpulse(b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
 		}
     }
     void unjump() {
         jumping = false;
-		if(shouldJump)
-			actualJump();
     }
-private:
-	void actualJump() {
-		float angle = _body->GetAngle();
-		float strength = max(JUMP_STRENGTH * (clock.getElapsedTime().asSeconds() -
-				jumpStart.asSeconds())/JUMP_THRESHOLD, JUMP_STRENGTH);
-		float unitX = strength * sin(angle);
-		float unitY = strength * -cos(angle);
-		_body->ApplyLinearImpulse(b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
-		shouldJump = false;
-	}
-public:
     sf::Packet& output(sf::Packet& p) const override {
 		p << _name;
         Object::output(p);
@@ -179,11 +163,6 @@ public:
     }
 	void setName(std::string newp) {
 		_name = newp;
-	}
-
-	bool outOfBounds() {
-		return _body->GetPosition().x < 0 or
-			_body->GetPosition().x > PH_WIDTH;
 	}
 };
 

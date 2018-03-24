@@ -210,6 +210,7 @@ int main(int argc, char** argv) {
 					if(not isServer) ob->render(*window);
 				}
 			}
+			mtx.unlock();
 
             if (!roundActive) {
                 lastFrames--;
@@ -235,17 +236,20 @@ int main(int argc, char** argv) {
 
                 if (go1.goal(ball)) {
                     endMessage = "Goal team red";
+					mtx.lock();
                     ++score2;
+					mtx.unlock();
                     roundActive = false;
                 }
 
                 if (go2.goal(ball)) {
                     endMessage = "Goal team blue";
+					mtx.lock();
                     ++score1;
+					mtx.unlock();
                     roundActive = false;
                 }
             }
-			mtx.unlock();
         }
 
 		mtx.lock();

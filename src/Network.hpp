@@ -63,6 +63,12 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
     selector.add(listener);
 
     while (true) {
+		//Bonsoir les noms
+		unsigned count = 1;
+		for(unsigned i = 0 ; i < 4 ; ++i)
+			if(names.count(owners[i]) > 0)
+				(*players[i])->setName(names[owners[i]]
+						+ "-" + to_string(count++));
         if (selector.wait()) {
             mtx.lock();
 
@@ -108,12 +114,6 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
                         }
                     }
 
-				//Bonsoir les noms
-				unsigned count = 1;
-				for(unsigned i = 0 ; i < 4 ; ++i)
-					if(owners[i] == nullptr)
-						(*players[i])->setName(names[owners[i]]
-								+ "-" + to_string(count++));
             }
             mtx.unlock();
         }

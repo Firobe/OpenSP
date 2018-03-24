@@ -8,12 +8,12 @@
 #include "Text.hpp"
 #include "Culbuto.hpp"
 
-#define TORQUE 100
+#define TORQUE 140
 #define JUMP_STRENGTH 8.
 #define DEGTORAD (M_PI / 180.)
-#define SPEED (700 * DEGTORAD)
+#define SPEED (500 * DEGTORAD)
 #define CONTINUOUS 13.
-#define JUMP_THRESHOLD 0.1
+#define JUMP_THRESHOLD 0.01
 
 #define MIN_NSIZE 40.
 #define MAX_NSIZE 110.

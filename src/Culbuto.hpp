@@ -9,7 +9,7 @@
 
 using namespace std;
 
-#define EPSILON (0.004)
+#define EPSILON (0.1)
 
 class BitoMonitor : public b2ContactListener {
 public:
@@ -64,7 +64,7 @@ public:
 		b2PolygonShape bitoshape;
 		b2FixtureDef bitofix;
 		bitoshape.SetAsBox(
-				(_width / 2.) * (1.0 + EPSILON), EPSILON * _width, b2Vec2(0, _ballRadius), 0.);
+				(_width / 2.) * (0.9 + EPSILON), EPSILON * _width, b2Vec2(0, _ballRadius), 0.);
 		bitofix.shape = &bitoshape;
 		bitofix.isSensor = true;
 		bitonio = _body->CreateFixture(&bitofix);

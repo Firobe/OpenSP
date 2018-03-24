@@ -132,19 +132,19 @@ public:
 		}
 		_leftLeg.update(step);
 		_rightLeg.update(step);
+		if(jumping and canJump()) {
+			float angle = _body->GetAngle();
+			float strength = JUMP_STRENGTH;
+			float unitX = strength * sin(angle);
+			float unitY = strength * -cos(angle);
+			_body->ApplyForce(b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
+		}
     }
 	bool canJump() const {
 		return _leftLeg.colliding() or _rightLeg.colliding();
 	}
     void jump() {
 		jumping = true;
-		if(canJump()) {
-			float angle = _body->GetAngle();
-			float strength = JUMP_STRENGTH;
-			float unitX = strength * sin(angle);
-			float unitY = strength * -cos(angle);
-			_body->ApplyLinearImpulse(b2Vec2(unitX, unitY), _body->GetWorldCenter(), true);
-		}
     }
     void unjump() {
         jumping = false;

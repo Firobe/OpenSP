@@ -12,7 +12,7 @@
 #define JUMP_STRENGTH 7.
 #define DEGTORAD (M_PI / 180.)
 #define SPEED (600 * DEGTORAD)
-#define CONTINUOUS 14.
+#define CONTINUOUS 12.5
 
 #define MIN_NSIZE 40.
 #define MAX_NSIZE 110.

@@ -2,7 +2,7 @@
 #define GROUND_HPP
 
 #include <SFML/Graphics.hpp>
-#include <Box2D/Box2D.h>
+#include <box2d/box2d.h>
 #include "StaticBox.hpp"
 
 class Ground : public StaticBox {

@@ -10,6 +10,8 @@
 #include "Text.hpp"
 #include "Network.hpp"
 
+#define FPS_COUNTER_TIMER (0.3)
+
 using namespace std;
 
 bool isServer = false;
@@ -79,13 +81,18 @@ int main(int argc, char** argv) {
         objects = {&ground, &ball, &p1A, &p1B, &p2A, &p2B, &go1, &go2};
 		pp1A = &p1A; pp1B = &p1B; pp2A = &p2A; pp2B = &p2B;
         bool roundActive = true;
-        int lastFrames = 100;
+        float lastSeconds = 3;
         string endMessage;
-		float accumulated = 0;
+		float netupdate_timer = 0;
+
 		bool nameSent = false;
 		bool firstInput = false;
 
-        while ((isServer or window->isOpen()) and lastFrames > 0) {
+        float fps_timer = 0;
+        int last_fps_nb = 0;
+        int last_fps_result = 0;
+
+        while ((isServer or window->isOpen()) and lastSeconds > 0) {
             sf::Event event;
 
             if (isServer and rand() % 7000 == 0) {
@@ -174,8 +181,8 @@ int main(int argc, char** argv) {
 			}
 
 			if(isServer) {
-				accumulated += elapsed;
-				if (accumulated >= 1./128.) {
+                netupdate_timer -= elapsed;
+				if (netupdate_timer <= 0) {
 					sf::Packet p;
 					p << objects;
 					p << sf::Uint8(roundNb)
@@ -192,11 +199,8 @@ int main(int argc, char** argv) {
 					}
 					clients.resize(clients.size() - toDelete);
 					mtx.unlock();
-					accumulated = 0;
+					netupdate_timer = SECONDS_BETWEEN_UPDATES;
 				}
-				mtx.lock();
-				++roundNb;
-				mtx.unlock();
 			}
 
 			mtx.lock();
@@ -216,15 +220,25 @@ int main(int argc, char** argv) {
 			mtx.unlock();
 
             if (!roundActive) {
-                lastFrames--;
+                lastSeconds -= elapsed;
                 if(not isServer)
 					Text::drawText(*window, endMessage, sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 4), 40);
             }
 
+            if(not isServer) {
+                fps_timer -= elapsed;
+                if (fps_timer <= 0) {
+                    fps_timer = FPS_COUNTER_TIMER;
+                    last_fps_result = static_cast<int>(last_fps_nb/FPS_COUNTER_TIMER);
+                    last_fps_nb = 0;
+                }
+                ++last_fps_nb;
+            }
+
 			if(not isServer) {
 				Text::drawText(*window, "Round " + to_string(roundNb), sf::Vector2f(0, 0), 24, false);
-				Text::drawText(*window, "FPS : " + to_string(static_cast<int>(1./elapsed)),
-						sf::Vector2f(0, SCREEN_HEIGHT - 30), 24, false);
+				Text::drawText(*window, "FPS : " + to_string(last_fps_result),
+                        sf::Vector2f(0, SCREEN_HEIGHT - 30), 24, false);
 				Text::drawText(*window, to_string(score1) + " - " + to_string(score2),
 							   sf::Vector2f(SCREEN_WIDTH / 2, 0.05 * SCREEN_HEIGHT), 45);
 

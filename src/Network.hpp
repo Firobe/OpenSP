@@ -5,6 +5,7 @@
 #include <vector>
 #include <mutex>
 
+#define SECONDS_BETWEEN_UPDATES (1./128.)
 //DO NOT CHANGE ORDER
 #define P1_PRESSED 0
 #define P2_PRESSED 1

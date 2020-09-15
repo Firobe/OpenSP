@@ -1,5 +1,5 @@
 COMPILER = c++
-ADD_CFLAGS = -Wall -std=c++11 -O0 -g -pthread
+ADD_CFLAGS = -Wall -O3 -g -pthread
 NO_PKG_LIBS = -lbox2d -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-network -lsfml-system -lpthread
 CXXFLAGS = $(ADD_CFLAGS)
 LINKS = $(NO_PKG_LIBS)

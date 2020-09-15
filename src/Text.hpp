@@ -17,11 +17,11 @@ class Text {
 		text.setFont(font);
 	}
 	static void drawText(sf::RenderWindow& w, std::string msg, sf::Vector2f position,
-			int size = 16, bool center = true) {
+			int size = 16, bool center = true, sf::Color color = sf::Color::White) {
 		size = std::max(TEXT_RATIO * size, 5);
 		text.setCharacterSize(size);
 		text.setString(msg);
-		text.setFillColor(sf::Color::White);
+		text.setFillColor(color);
 		auto bounds = text.getLocalBounds();
 		if(center)
 			text.setPosition(position - sf::Vector2f(bounds.width / 2., bounds.height / 2));

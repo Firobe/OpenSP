@@ -5,7 +5,7 @@
 #include <vector>
 #include <mutex>
 
-#define SECONDS_BETWEEN_UPDATES (1./128.)
+#define SECONDS_BETWEEN_UPDATES (1./32.)
 //DO NOT CHANGE ORDER
 #define P1_PRESSED 0
 #define P2_PRESSED 1
@@ -38,12 +38,8 @@ sf::Packet& operator >> (sf::Packet& packet, Event& e) {
 
 void clientRecv(sf::TcpSocket* socket, std::vector<Object*>& objects, std::mutex& mtx,
                 sf::IpAddress serverAdress, unsigned* round, int* score1, int* score2) {
-    while (true) {
-        sf::Packet p;
-
-        if (socket->receive(p) != sf::Socket::Done)
-            exit(1);
-
+    sf::Packet p;
+    while (socket->receive(p) == sf::Socket::Done) {
         mtx.lock();
 		sf::Uint8 c;
 		sf::Int8 u, l;
@@ -62,8 +58,12 @@ void serverRecv(unsigned expectedPort, std::mutex& mtx,
 	Player** players[] = {p1A, p1B, p2A, p2B};
     sf::TcpListener listener;
 	std::map<sf::TcpSocket*, std::string> names;
+    cout << "Starting a server on port " << expectedPort << endl;
 
-    if (listener.listen(expectedPort) != sf::Socket::Done) exit(1);
+    if (listener.listen(expectedPort) != sf::Socket::Done) {
+        cerr << "Failed to listen" << endl;
+        exit(1);
+    }
 
     sf::SocketSelector selector;
     selector.add(listener);

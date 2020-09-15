@@ -11,20 +11,23 @@
 #include "Network.hpp"
 
 #define FPS_COUNTER_TIMER (0.3)
+#define TARGET_SCORE 1
 
 using namespace std;
 
-bool isServer = false;
-
 int main(int argc, char** argv) {
 	string name;
-	if(argc < 2) return EXIT_FAILURE;
+	if(argc < 2) {
+        cout << "Usage: " << endl
+             << "- start a server : openSP server [port]" << endl
+             << "- start a client : openSP SERVER_IP [port]" << endl;
+        return EXIT_FAILURE;
+    }
+    const bool isServer = (argv[1] == string("server"));
 	unsigned port = 2713;
-	if(argv[1] == string("server"))
-		isServer = true;
 	if(argc > 2) port = stoi(argv[2]);
     srand(time(0));
-	sf::RenderWindow* window;
+	sf::RenderWindow* window = nullptr;
 	if(not isServer) {
 		cout << "Username : ";
 		cin >> name;
@@ -38,9 +41,13 @@ int main(int argc, char** argv) {
 
 	sf::TcpSocket socket;
 	sf::IpAddress serverAdress = argv[1];
-	if(not isServer)
-		if(socket.connect(serverAdress, port) != sf::Socket::Done)
+	if(not isServer) {
+        cout << "Connecting to " << serverAdress << ":" << port << endl;
+		if(socket.connect(serverAdress, port) != sf::Socket::Done) {
+            cerr << "Connection failed" << endl;
 			exit(1);
+        }
+    }
 	vector<Object*> objects(8);
 	Player *pp1A, *pp1B, *pp2A, *pp2B;
 	vector<sf::TcpSocket*> clients;
@@ -63,7 +70,7 @@ int main(int argc, char** argv) {
 	sf::Packet namep;
 	namep << e;
 
-    while (score1 < 5 and score2 < 5) {
+    while (score1 < TARGET_SCORE and score2 < TARGET_SCORE) {
         b2Vec2 gravity(0., 9.81);
         b2World world(gravity);
 		BitoMonitor bebouzi;
@@ -94,13 +101,6 @@ int main(int argc, char** argv) {
 
         while ((isServer or window->isOpen()) and lastSeconds > 0) {
             sf::Event event;
-
-            if (isServer and rand() % 7000 == 0) {
-				mtx.lock();
-                //p3A.jump();
-                //p3B.jump();
-				mtx.unlock();
-            }
 
             while (not isServer and window->pollEvent(event)) {
                 if (event.type == sf::Event::Closed)
@@ -190,8 +190,9 @@ int main(int argc, char** argv) {
 					  << sf::Int8(score2);
 					int toDelete = 0;
 					mtx.lock();
-					for(sf::TcpSocket* c : clients) {
+					for(sf::TcpSocket*& c : clients) {
 						if(c->send(p) == sf::Socket::Disconnected) {
+                            cout << "A client has disconnected" << endl;
 							delete c;
 							c = *(clients.end() - 1 - toDelete);
 							++toDelete;
@@ -275,6 +276,23 @@ int main(int argc, char** argv) {
         ++roundNb;
 		mtx.unlock();
     }
+
+    if(not isServer and window->isOpen()) {
+        string endMessage = score1 > score2 ? "Blue team wins!" : "Red team wins!";
+        float lastWait = 5;
+        sf::Event event;
+        while(lastWait > 0) {
+            sf::Color color(rand() % 256, rand() % 256, rand() % 256);
+            while(window->pollEvent(event));
+            float elapsed = clock.restart().asSeconds();
+            lastWait -= elapsed;
+            Text::drawText(*window, endMessage, sf::Vector2f(SCREEN_WIDTH / 2, 0.15 * SCREEN_HEIGHT), 60, true, color);
+            window->display();
+            this_thread::sleep_for(100ms);
+        }
+    }
+
+    cout << "End of game !" << endl;
 
     return 0;
 }

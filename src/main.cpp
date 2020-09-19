@@ -11,7 +11,7 @@
 #include "Network.hpp"
 
 #define FPS_COUNTER_TIMER (0.3)
-#define TARGET_SCORE 1
+#define TARGET_SCORE 5
 
 using namespace std;
 

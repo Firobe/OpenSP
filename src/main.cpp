@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
 	if(not isServer) {
 		cout << "Username : ";
 		cin >> name;
-		window = new sf::RenderWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenSP");
+		window = new sf::RenderWindow(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "OpenGL_OpenSP");
 		window->setKeyRepeatEnabled(false);
 	}
     Text::init();

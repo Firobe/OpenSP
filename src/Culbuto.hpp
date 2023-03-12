@@ -68,7 +68,7 @@ public:
 		bitofix.shape = &bitoshape;
 		bitofix.isSensor = true;
 		bitonio = _body->CreateFixture(&bitofix);
-		bitonio->SetUserData((void*) this);
+		bitonio->GetUserData().pointer = (uintptr_t)this;
 
 
 		// Weight under ball (must stay at the end)
